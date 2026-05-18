@@ -45,6 +45,7 @@ JSON files remain available as import/export artifacts throughout the migration.
   - UI persistence now goes through dedicated repositories
   - focused repository tests cover applications and configurations
   - a frontend storage snapshot API client now exists for the future backend path
+  - a coordinated HTTP snapshot repository now exists for the future backend-backed mode
 - not switched yet:
   - localStorage remains the active browser source of truth
   - folder sync remains available and untouched
@@ -131,10 +132,10 @@ JSON files remain available as import/export artifacts throughout the migration.
 
 ### Next Phase 2 slices
 
-- add an HTTP-backed snapshot repository that composes both application/configuration domains safely
 - add explicit import/export UX instead of relying on folder sync as an implicit storage workflow
 - switch the default runtime path to backend storage only after read/write parity is covered by tests
-- add end-to-end API tests with a FastAPI HTTP client once `httpx` is available in the shared workspace test environment
+- decide the write strategy for deletes and full replacement before switching the UI default path
+- wire the HTTP snapshot repository into an opt-in runtime path before making it the default
 
 ## Test Strategy
 
