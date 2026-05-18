@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { loadApplicationsFromLocalStorage } from "./applications";
 import { TopBar } from "../components/layout/TopBar";
 import { ApplicationPage } from "../pages/ApplicationPage";
 import { CanvasDesignPage } from "../pages/CanvasDesignPage";
@@ -9,6 +8,7 @@ import { useUiStore } from "../store/uiStore";
 import { useWsConnection } from "../hooks/useWsConnection";
 import { useTeleopPublisher } from "../hooks/useTeleopPublisher";
 import { useThemeMode } from "../hooks/useThemeMode";
+import { browserApplicationRepository } from "../storage/applicationRepository";
 import { type AppRoute, useAppRouter } from "./router";
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
   const [modeButtonsVisible, setModeButtonsVisible] = useState(true);
   const applicationTitle = useMemo(() => {
     if (route.kind !== "application") return null;
-    const match = loadApplicationsFromLocalStorage().find(
+    const match = browserApplicationRepository.load().find(
       (application) => application.id === route.appId
     );
     return match?.name ?? route.appId;

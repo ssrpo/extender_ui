@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { loadApplicationsFromLocalStorage } from "../app/applications";
 import { resolveApplicationRuntimePlugins } from "../app/runtime/registry";
 import { useApplicationRuntimeState } from "../app/runtime/useApplicationRuntimeState";
 import type { CanvasRect } from "../components/layout/CanvasItem";
@@ -10,8 +9,6 @@ import {
   resolveCanvasFitScale,
   resolveCanvasPresetSize,
   cloneWidgets,
-  loadConfigurationsFromLocalStorage,
-  persistConfigurationsToLocalStorage,
   type CanvasWidget,
   type PoseSnapshot,
   type WidgetConfiguration,
@@ -19,6 +16,8 @@ import {
 import { wsClient } from "../services/wsClient";
 import { useTeleopStore } from "../store/teleopStore";
 import { useUiStore } from "../store/uiStore";
+import { browserApplicationRepository } from "../storage/applicationRepository";
+import { browserConfigurationRepository } from "../storage/configurationRepository";
 import {
   applyPoseSnapshot,
   collectCurrentPoseTopics,
@@ -115,7 +114,7 @@ export function ApplicationPage({
   const rvizStreamUrl = useUiStore((s) => s.rvizStreamUrl);
 
   const [configurations, setConfigurations] = useState<WidgetConfiguration[]>(() =>
-    loadConfigurationsFromLocalStorage()
+    browserConfigurationRepository.load()
   );
   const [widgetPulseMap, setWidgetPulseMap] = useState<Record<string, number>>({});
   const [freshnessClock, setFreshnessClock] = useState<number>(() => Date.now());
@@ -127,7 +126,7 @@ export function ApplicationPage({
     height: 0,
   });
 
-  const applications = useMemo(() => loadApplicationsFromLocalStorage(), []);
+  const applications = useMemo(() => browserApplicationRepository.load(), []);
   const activeApplication = useMemo(
     () => applications.find((application) => application.id === applicationId) ?? null,
     [applicationId, applications]
@@ -189,7 +188,7 @@ export function ApplicationPage({
   }, [activeScreenId]);
 
   useEffect(() => {
-    persistConfigurationsToLocalStorage(configurations);
+    browserConfigurationRepository.save(configurations);
   }, [configurations]);
 
   useEffect(() => {

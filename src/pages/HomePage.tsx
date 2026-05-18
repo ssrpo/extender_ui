@@ -2,18 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 
 import {
   createEmptyApplication,
-  loadApplicationsFromLocalStorage,
-  persistApplicationsToLocalStorage,
   removeApplication,
-  syncApplicationsFromFolder,
-  syncApplicationsToFolder,
   type ApplicationConfig,
   upsertApplication,
 } from "../app/applications";
-import {
-  loadConfigurationsFromLocalStorage,
-  type WidgetConfiguration,
-} from "../components/widgets";
+import { type WidgetConfiguration } from "../components/widgets";
+import { browserApplicationRepository } from "../storage/applicationRepository";
+import { browserConfigurationRepository } from "../storage/configurationRepository";
 
 type HomePageProps = {
   onOpenCanvasDesign: () => void;
@@ -34,20 +29,20 @@ const normalizeScreenRefs = (screenIds: string[]) => {
 
 export function HomePage({ onOpenCanvasDesign, onOpenApplication }: HomePageProps) {
   const [applications, setApplications] = useState<ApplicationConfig[]>(() =>
-    loadApplicationsFromLocalStorage()
+    browserApplicationRepository.load()
   );
   const [screens, setScreens] = useState<WidgetConfiguration[]>(() =>
-    loadConfigurationsFromLocalStorage()
+    browserConfigurationRepository.load()
   );
   const [selectedApplicationId, setSelectedApplicationId] = useState<string>("");
   const [statusMessage, setStatusMessage] = useState<string>("");
 
   useEffect(() => {
-    persistApplicationsToLocalStorage(applications);
+    browserApplicationRepository.save(applications);
   }, [applications]);
 
   useEffect(() => {
-    setScreens(loadConfigurationsFromLocalStorage());
+    setScreens(browserConfigurationRepository.load());
   }, []);
 
   useEffect(() => {
@@ -105,7 +100,7 @@ export function HomePage({ onOpenCanvasDesign, onOpenApplication }: HomePageProp
 
   const handleSyncToFolder = async () => {
     try {
-      const count = await syncApplicationsToFolder(applications);
+      const count = await browserApplicationRepository.syncToFolder(applications);
       setStatusMessage(`Synced ${count} application(s) to folder.`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Sync to folder failed.");
@@ -114,7 +109,7 @@ export function HomePage({ onOpenCanvasDesign, onOpenApplication }: HomePageProp
 
   const handleSyncFromFolder = async () => {
     try {
-      const merged = await syncApplicationsFromFolder(applications);
+      const merged = await browserApplicationRepository.syncFromFolder(applications);
       setApplications(merged);
       setStatusMessage(`Synced ${merged.length} application(s) from folder.`);
     } catch (error) {
@@ -255,4 +250,3 @@ export function HomePage({ onOpenCanvasDesign, onOpenApplication }: HomePageProp
     </main>
   );
 }
-

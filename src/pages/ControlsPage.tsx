@@ -40,11 +40,7 @@ import {
   createWidgetFromCatalogType,
   DEFAULT_WIDGETS,
   getDefaultDemoConfigurationByName,
-  loadConfigurationsFromLocalStorage,
-  persistConfigurationsToLocalStorage,
   removeConfiguration,
-  syncConfigurationsFromFolder,
-  syncConfigurationsToFolder,
   type ButtonWidgetModel,
   type CanvasWidget,
   type CurvesWidgetModel,
@@ -82,6 +78,7 @@ import {
 } from "../components/widgets";
 import { useTeleopStore } from "../store/teleopStore";
 import { useUiStore } from "../store/uiStore";
+import { browserConfigurationRepository } from "../storage/configurationRepository";
 import {
   resolvePendingResizeSourcePreset,
 } from "./controls/canvasPresetResizing";
@@ -225,7 +222,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
   const [isInspectorOpen, setIsInspectorOpen] = useState(true);
 
   const [configurations, setConfigurations] = useState<WidgetConfiguration[]>(() =>
-    loadConfigurationsFromLocalStorage()
+    browserConfigurationRepository.load()
   );
   const [canvasSettings, setCanvasSettings] = useState<CanvasSettings>(() =>
     cloneCanvasSettings(DEFAULT_CANVAS_SETTINGS)
@@ -274,7 +271,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
   }, [selectedWidgetId, widgets]);
 
   useEffect(() => {
-    persistConfigurationsToLocalStorage(configurations);
+    browserConfigurationRepository.save(configurations);
   }, [configurations]);
 
   useEffect(() => {
@@ -1102,7 +1099,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
 
   const handleSyncToFolder = async () => {
     try {
-      const count = await syncConfigurationsToFolder(configurations);
+      const count = await browserConfigurationRepository.syncToFolder(configurations);
       setStatusMessage(`Synced ${count} screen(s) to folder.`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Sync to folder failed.");
@@ -1111,7 +1108,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
 
   const handleSyncFromFolder = async () => {
     try {
-      const merged = await syncConfigurationsFromFolder(configurations);
+      const merged = await browserConfigurationRepository.syncFromFolder(configurations);
       setConfigurations(merged);
       setStatusMessage(`Synced ${merged.length} screen(s) from folder.`);
     } catch (error) {
