@@ -10,7 +10,8 @@ import {
   PLAY_PETANQUE_MEASURE_VECTORS_TOPIC,
 } from "../../pages/applicationTopics";
 import { MEASURE_DEMO_HISTORY_ENTRY } from "../../apps/petanque/measureRuntime";
-import { petanqueRuntimePlugin } from "../../apps/petanque/runtime";
+import { petanqueRuntimePlugin } from "./petanqueRuntime";
+import { sandboxRuntimePlugin } from "./sandboxRuntime";
 import { resolveApplicationRuntimePlugins } from "./registry";
 import type { ApplicationRuntimeButtonArgs, ApplicationRuntimeMessageArgs } from "./types";
 
@@ -76,6 +77,38 @@ describe("petanqueRuntimePlugin", () => {
       activeScreenId: "sandbox_control",
     });
     expect(sandboxPlugins.map((plugin) => plugin.id)).toContain("sandbox");
+  });
+
+  it("exposes sandbox max-velocity presentation through the runtime re-export", () => {
+    const presentation = sandboxRuntimePlugin.getMaxVelocityState?.({
+      application: null,
+      activeScreenId: "sandbox_control",
+      widget: {
+        id: "sandbox-max-velocity",
+        kind: "max-velocity",
+        label: "Max Velocity",
+        topic: "/cmd/max_velocity",
+        min: 0.1,
+        max: 3.0,
+        step: 0.1,
+        rect: { x: 0, y: 0, w: 10, h: 10 },
+      } as never,
+      widgets: [],
+      state: createRuntimeState(),
+      actions: createRuntimeActions(),
+    });
+
+    expect(sandboxRuntimePlugin.matches({
+      application: null,
+      activeScreenId: "sandbox_control",
+    })).toBe(true);
+    expect(presentation).toMatchObject({
+      reverseDirection: false,
+      endpointLabels: {
+        left: "Precise",
+        right: "Fast",
+      },
+    });
   });
 
   it("maps measure websocket messages into runtime state actions", () => {
