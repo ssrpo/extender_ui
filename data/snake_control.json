@@ -49,7 +49,7 @@
       "binding": "joy",
       "label": "Joystick",
       "topic": "/cmd/joystick",
-      "showTopicInfo": false,
+      "showTopicInfo": true,
       "color": "#4a9eff",
       "deadzone": 0.1,
       "diskSize": 96,
@@ -72,5 +72,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-07-09T14:00:01.960Z"
+  "updatedAt": "2026-07-09T15:13:01.198Z"
 }
