@@ -9,6 +9,12 @@ import { ADMIN_DEMO_SCREEN_IDS } from "../../app/demoDefaults";
 import { createWidgetFromCatalogType, type WidgetCatalogType } from "./widgetCatalog";
 import { normalizeRosMessageToggleWidget } from "./rosMessageToggle/model";
 import { readJsonStorage, writeJsonStorage } from "../../utils/browserStorage";
+import {
+  LEGACY_SNAKE_TOPICS,
+  SNAKE_MODE_PRESSED_PAYLOAD,
+  SNAKE_MODE_RELEASED_PAYLOAD,
+  SNAKE_MODE_REQUEST_TOPIC,
+} from "../../types/cartesianManager";
 
 export type PoseTopicValue =
   | { kind: "scalar"; value: number }
@@ -915,10 +921,10 @@ export const DEFAULT_DEMO_CONFIGURATIONS: WidgetConfiguration[] = [
     }),
     createDemoWidget("snake-hold", "momentary-ros-message", 860, 116, {
       label: "Hold Snake",
-      topic: "/activate_snake",
-      messageType: "std_msgs/msg/Bool",
-      pressedPayload: "{data: true}",
-      releasedPayload: "{data: false}",
+      topic: SNAKE_MODE_REQUEST_TOPIC,
+      messageType: "std_msgs/msg/String",
+      pressedPayload: SNAKE_MODE_PRESSED_PAYLOAD,
+      releasedPayload: SNAKE_MODE_RELEASED_PAYLOAD,
       rect: { w: 220, h: 76 },
     }),
     createDemoWidget("snake-joystick", "joystick", 430, 271, {
@@ -2545,6 +2551,39 @@ const normalizeGenericTeleopMaxVelocityRanges = (
     };
   });
 
+const migrateSnakeHoldToModeRequest = (
+  configurations: WidgetConfiguration[]
+): WidgetConfiguration[] =>
+  configurations.map((configuration) => {
+    if (configuration.name !== "snake_control") return configuration;
+
+    let changed = false;
+    const nextWidgets = configuration.widgets.map((widget) => {
+      if (
+        widget.id === "snake-hold" &&
+        widget.kind === "momentary-ros-message" &&
+        LEGACY_SNAKE_TOPICS.includes(widget.topic)
+      ) {
+        changed = true;
+        return {
+          ...widget,
+          topic: SNAKE_MODE_REQUEST_TOPIC,
+          messageType: "std_msgs/msg/String",
+          pressedPayload: SNAKE_MODE_PRESSED_PAYLOAD,
+          releasedPayload: SNAKE_MODE_RELEASED_PAYLOAD,
+        };
+      }
+      return widget;
+    });
+
+    if (!changed) return configuration;
+    return {
+      ...configuration,
+      widgets: nextWidgets,
+      updatedAt: new Date().toISOString(),
+    };
+  });
+
 const migrateSnakeControlTopic = (
   configurations: WidgetConfiguration[]
 ): WidgetConfiguration[] =>
@@ -2719,6 +2758,7 @@ const applyConfigurationMigrations = (
   nextConfigurations = normalizePetanqueTeleopButtonLayout(nextConfigurations);
   nextConfigurations = normalizeGenericTeleopMaxVelocityRanges(nextConfigurations);
   nextConfigurations = migrateSnakeControlTopic(nextConfigurations);
+  nextConfigurations = migrateSnakeHoldToModeRequest(nextConfigurations);
   return migrateControlPanelVisualServoTelemetry(nextConfigurations);
 };
 

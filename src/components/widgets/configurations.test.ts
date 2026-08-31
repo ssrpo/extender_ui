@@ -172,7 +172,7 @@ describe("widget configuration migrations", () => {
     });
   });
 
-  it("migrates saved snake hold buttons to the controller snake topic", () => {
+  it("migrates saved snake hold buttons to the cartesian_manager mode request", () => {
     window.localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify([
@@ -206,7 +206,51 @@ describe("widget configuration migrations", () => {
 
     expect(snakeHoldWidget).toMatchObject({
       kind: "momentary-ros-message",
-      topic: "/activate_snake",
+      topic: "/mode_request",
+      messageType: "std_msgs/msg/String",
+      pressedPayload: "{data: geometric/snake}",
+      releasedPayload: "{data: geometric/both}",
+    });
+  });
+
+  it("migrates snake hold buttons saved with the intermediate activate_snake topic", () => {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([
+        {
+          name: "snake_control",
+          widgets: [
+            {
+              id: "snake-hold",
+              kind: "momentary-ros-message",
+              label: "Hold Snake",
+              topic: "/activate_snake",
+              messageType: "std_msgs/msg/Bool",
+              pressedPayload: "{data: true}",
+              releasedPayload: "{data: false}",
+              rect: { x: 860, y: 116, w: 220, h: 76 },
+            },
+          ],
+          poses: [],
+          canvas: { presetId: "hd", runtimeMode: "fit" },
+          updatedAt: "2026-02-24T00:00:00.000Z",
+        },
+      ])
+    );
+
+    const snakeControl = loadConfigurationsFromLocalStorage().find(
+      (configuration) => configuration.name === "snake_control"
+    );
+    const snakeHoldWidget = snakeControl?.widgets.find(
+      (widget) => widget.id === "snake-hold"
+    );
+
+    expect(snakeHoldWidget).toMatchObject({
+      kind: "momentary-ros-message",
+      topic: "/mode_request",
+      messageType: "std_msgs/msg/String",
+      pressedPayload: "{data: geometric/snake}",
+      releasedPayload: "{data: geometric/both}",
     });
   });
 });

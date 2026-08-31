@@ -68,7 +68,7 @@ Current Sandbox V0.0 screens:
 | `sandbox_control` | General sandbox teleoperation and UI smoke checks. |
 | `sandbox_teleop_config` | Teleoperation configuration and reusable widget examples. |
 | `control_panel` | Daily operation screen with webcam preview, Cartesian velocity controls, gain, gripper, visual-servoing controls, and compact telemetry. |
-| `snake_control` | Two-mode joystick control with B1/B2 mode toggle and hold-to-enable snake command. |
+| `snake_control` | Two-mode joystick control with B1/B2 axis toggle and a hold-to-request `geometric/snake` mode. |
 | `visual_servoing` | Camera/RViz preview plus visual-servoing ON/OFF and save-tag controls. |
 | `visual_servoing_monitor` | Dedicated topic monitor for AprilTag detections, velocity commands, and servo error snapshots. |
 
@@ -231,15 +231,44 @@ linear: {x, y, z}
 angular: {x, y, z}
 ```
 
-`tablet_interface` republishes this command as:
+`tablet_interface` republishes this command for
+[`cartesian_manager`](https://github.com/ISIR-EXTENDER/cartesian_manager) as:
 
 | ROS topic | Message |
 | --- | --- |
-| `/teleop_cmd` | `extender_msgs/msg/TeleopCommand` |
+| `/joystick_cartesian_command` | `geometry_msgs/msg/TwistStamped` |
+
+The legacy `extender_msgs/msg/TeleopCommand` output on `/teleop_cmd` is still
+available through the backend `command_backend` parameter, as a rollback while
+the manager stack is validated on hardware.
+
+The `mode` field stays a UI concern. Modes 0-4 (`B1`, `ROTATION`,
+`TRANSLATION`, `B2`, `SNAKE`) select which axes are active, and the frontend
+zeroes the inactive ones before sending. They are not `cartesian_manager` modes,
+which matches how `joystick_mapper` handles its own local B1/B2 modes.
 
 Widget `topic` values such as `/cmd/joystick`, `/cmd/joystick_z`, or
 `/cmd/mode` are UI configuration metadata for the screen editor and readouts.
 Changing them does not change the backend ROS teleop topic.
+
+### Mode Requests
+
+Robot control modes are a separate message. A widget that should change the
+`cartesian_manager` mode publishes a `std_msgs/msg/String` on `/mode_request`:
+
+| Mode request | Effect |
+| --- | --- |
+| `geometric/both` | Neutral, no geometric shaping. |
+| `geometric/jaco` | Jaco shaper. |
+| `geometric/snake` | Snake shaper. |
+| `behaviour/joint_target/home` | One-shot move to the named joint target. |
+
+The `snake_control` screen uses a `Momentary ROS Message` widget for this:
+`geometric/snake` while held, `geometric/both` on release. Saved configurations
+using the older `/activate_snake` or `/snake_control/enable` boolean topics are
+migrated automatically on load.
+
+The constants live in [`src/types/cartesianManager.ts`](src/types/cartesianManager.ts).
 
 Generic teleoperation treats `/cmd/max_velocity` as a normalized gain from `0`
 to `1`. Legacy Petanque throw controls keep their own app-specific ranges on

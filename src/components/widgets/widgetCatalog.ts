@@ -34,6 +34,7 @@ import {
   DEFAULT_MOMENTARY_ROS_MESSAGE_RELEASED_PAYLOAD,
   DEFAULT_MOMENTARY_ROS_MESSAGE_TYPE,
 } from "./momentaryRosMessage/model";
+import { SNAKE_MODE_REQUEST_TOPIC } from "../../types/cartesianManager";
 
 export type WidgetCatalogType =
   | "joystick"
@@ -331,7 +332,7 @@ export function createWidgetFromCatalogType(
       id: nextWidgetId(),
       kind: "momentary-ros-message",
       label: "Hold",
-      topic: "/activate_snake",
+      topic: SNAKE_MODE_REQUEST_TOPIC,
       messageType: DEFAULT_MOMENTARY_ROS_MESSAGE_TYPE,
       pressedPayload: DEFAULT_MOMENTARY_ROS_MESSAGE_PRESSED_PAYLOAD,
       releasedPayload: DEFAULT_MOMENTARY_ROS_MESSAGE_RELEASED_PAYLOAD,
