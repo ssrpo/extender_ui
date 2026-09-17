@@ -48,6 +48,7 @@
       "label": "Run Trajectory",
       "topic": "/cmd/trajectory",
       "payload": "run",
+      "tone": "default",
       "rect": {
         "x": 480,
         "y": 90,
@@ -120,8 +121,8 @@
   ],
   "poses": [],
   "canvas": {
-    "presetId": "tablet",
+    "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

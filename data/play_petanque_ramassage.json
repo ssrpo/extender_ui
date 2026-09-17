@@ -2,6 +2,63 @@
   "name": "play_petanque_ramassage",
   "widgets": [
     {
+      "id": "play-ram-title",
+      "kind": "text",
+      "label": "Text",
+      "topic": "/ui/text",
+      "text": "PlayPetanque RAMASSAGE",
+      "fontSize": 26,
+      "align": "left",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "w": 500,
+        "h": 56
+      }
+    },
+    {
+      "id": "play-ram-teleop",
+      "kind": "button",
+      "label": "Teleop",
+      "topic": "/petanque_state_machine/change_state",
+      "payload": "teleop",
+      "tone": "default",
+      "rect": {
+        "x": 20,
+        "y": 90,
+        "w": 150,
+        "h": 58
+      }
+    },
+    {
+      "id": "play-ram-home",
+      "kind": "button",
+      "label": "Home",
+      "topic": "/petanque_state_machine/change_state",
+      "payload": "go_to_start",
+      "tone": "success",
+      "rect": {
+        "x": 180,
+        "y": 90,
+        "w": 150,
+        "h": 58
+      }
+    },
+    {
+      "id": "play-ram-pick-up",
+      "kind": "button",
+      "label": "Pick Up Ball",
+      "topic": "/petanque_state_machine/change_state",
+      "payload": "pick_up",
+      "tone": "accent",
+      "rect": {
+        "x": 340,
+        "y": 90,
+        "w": 190,
+        "h": 58
+      }
+    },
+    {
       "id": "play-ram-magnet",
       "kind": "magnet-control",
       "label": "Magnet",
@@ -9,10 +66,10 @@
       "onPayload": "electromagnet_on",
       "offPayload": "electromagnet_off",
       "rect": {
-        "x": 1027,
-        "y": 145,
-        "w": 235,
-        "h": 116
+        "x": 1030,
+        "y": 90,
+        "w": 220,
+        "h": 92
       }
     },
     {
@@ -27,14 +84,34 @@
       "showUrl": false,
       "overlayText": "",
       "rect": {
-        "x": 0,
-        "y": 15,
-        "w": 709,
-        "h": 676
+        "x": 20,
+        "y": 170,
+        "w": 760,
+        "h": 530
       },
       "showHeader": false,
       "showSourceBadge": false,
       "showWebcamPicker": false
+    },
+    {
+      "id": "play-ram-rz",
+      "kind": "slider",
+      "binding": "rz",
+      "label": "RZ",
+      "topic": "/cmd/joystick_rz",
+      "direction": "horizontal",
+      "showLabel": true,
+      "showTopicInfo": false,
+      "labelAlign": "center",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "rect": {
+        "x": 800,
+        "y": 170,
+        "w": 450,
+        "h": 80
+      }
     },
     {
       "id": "play-ram-translation",
@@ -53,10 +130,33 @@
         "left": "X-"
       },
       "rect": {
-        "x": 881,
-        "y": 316,
-        "w": 399,
-        "h": 404
+        "x": 800,
+        "y": 270,
+        "w": 220,
+        "h": 220
+      }
+    },
+    {
+      "id": "play-ram-rotation",
+      "kind": "joystick",
+      "binding": "rot",
+      "label": "Rotation",
+      "topic": "/cmd/joystick_rxry",
+      "showTopicInfo": true,
+      "color": "#ff4d67",
+      "deadzone": 0.1,
+      "diskSize": 80,
+      "labels": {
+        "top": "RY+",
+        "right": "RX+",
+        "bottom": "RY-",
+        "left": "RX-"
+      },
+      "rect": {
+        "x": 1030,
+        "y": 270,
+        "w": 220,
+        "h": 220
       }
     },
     {
@@ -66,45 +166,17 @@
       "label": "Z",
       "topic": "/cmd/joystick_z",
       "direction": "vertical",
-      "showLabel": false,
+      "showLabel": true,
       "showTopicInfo": false,
       "labelAlign": "center",
       "min": -1,
       "max": 1,
       "step": 0.01,
       "rect": {
-        "x": 734,
-        "y": 316,
-        "w": 133,
-        "h": 391
-      }
-    },
-    {
-      "id": "widget-1773162473630-41019",
-      "kind": "button",
-      "label": "Teleop",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "teleop",
-      "tone": "default",
-      "rect": {
-        "x": 797,
-        "y": 31,
-        "w": 140,
-        "h": 52
-      }
-    },
-    {
-      "id": "widget-1773162503370-bef66",
-      "kind": "button",
-      "label": "Pick-up Pose",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "go_to_start",
-      "tone": "default",
-      "rect": {
-        "x": 989,
-        "y": 31,
-        "w": 140,
-        "h": 52
+        "x": 1160,
+        "y": 500,
+        "w": 90,
+        "h": 200
       }
     }
   ],
@@ -113,5 +185,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.148Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

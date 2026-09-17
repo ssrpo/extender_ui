@@ -70,6 +70,7 @@
       "label": "Ping Backend",
       "topic": "/debug/ping",
       "payload": "ping",
+      "tone": "default",
       "rect": {
         "x": 20,
         "y": 720,
@@ -80,8 +81,8 @@
   ],
   "poses": [],
   "canvas": {
-    "presetId": "tablet",
+    "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

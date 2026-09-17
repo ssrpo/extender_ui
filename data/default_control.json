@@ -2,114 +2,64 @@
   "name": "default_control",
   "widgets": [
     {
-      "id": "control-rz",
+      "id": "ctrl-rz",
       "kind": "slider",
       "binding": "rz",
-      "label": "RZ",
+      "label": "rz",
       "topic": "/cmd/joystick_rz",
       "direction": "horizontal",
+      "showLabel": false,
+      "showTopicInfo": false,
+      "labelAlign": "left",
       "min": -1,
       "max": 1,
       "step": 0.01,
       "rect": {
-        "x": 874,
-        "y": 180,
-        "w": 373,
-        "h": 96
-      },
-      "showLabel": true,
-      "labelAlign": "left",
-      "showTopicInfo": false
+        "x": 724,
+        "y": 16,
+        "w": 520,
+        "h": 92
+      }
     },
     {
-      "id": "control-z",
+      "id": "ctrl-mode",
+      "kind": "mode-button",
+      "label": "mode",
+      "topic": "/cmd/mode",
+      "rect": {
+        "x": 1048,
+        "y": 16,
+        "w": 200,
+        "h": 62
+      }
+    },
+    {
+      "id": "ctrl-z",
       "kind": "slider",
       "binding": "z",
-      "label": "Z",
+      "label": "z",
       "topic": "/cmd/joystick_z",
       "direction": "vertical",
+      "showLabel": true,
+      "showTopicInfo": false,
+      "labelAlign": "center",
       "min": -1,
       "max": 1,
       "step": 0.01,
       "rect": {
-        "x": 22,
-        "y": 315,
-        "w": 97,
-        "h": 337
-      },
-      "showTopicInfo": false
-    },
-    {
-      "id": "control-rotation",
-      "kind": "joystick",
-      "binding": "rot",
-      "label": "Rotation",
-      "topic": "/cmd/joystick_rxry",
-      "color": "#f97316",
-      "deadzone": 0.1,
-      "diskSize": 90,
-      "labels": {
-        "top": "RY+",
-        "right": "RX+",
-        "bottom": "RY-",
-        "left": "RX-"
-      },
-      "rect": {
-        "x": 853,
-        "y": 293,
-        "w": 415,
-        "h": 415
-      },
-      "showTopicInfo": false
-    },
-    {
-      "id": "control-max-velocity",
-      "kind": "max-velocity",
-      "label": "Max Velocity",
-      "topic": "/cmd/max_velocity",
-      "min": 0,
-      "max": 3,
-      "step": 0.01,
-      "rect": {
-        "x": 671,
-        "y": 63,
-        "w": 576,
-        "h": 107
+        "x": 24,
+        "y": 146,
+        "w": 96,
+        "h": 500
       }
     },
     {
-      "id": "control-load-home-pose",
-      "kind": "load-pose-button",
-      "label": "Load Home",
-      "topic": "/ui/load_pose",
-      "poseName": "home",
-      "icon": "home",
-      "rect": {
-        "x": 1617,
-        "y": 7,
-        "w": 145,
-        "h": 56
-      }
-    },
-    {
-      "id": "widget-1771258599213-055d3",
-      "kind": "gripper-control",
-      "label": "Gripper Control",
-      "topic": "/cmd/gripper",
-      "rect": {
-        "x": 22,
-        "y": 19,
-        "w": 271,
-        "h": 257
-      }
-    },
-    {
-      "id": "widget-1771585453611-dda5a",
+      "id": "ctrl-translation",
       "kind": "joystick",
       "binding": "joy",
-      "label": "Joystick",
-      "topic": "/cmd/joystick",
-      "showTopicInfo": true,
+      "label": "",
+      "topic": "/cmd/joystick_xy",
+      "showTopicInfo": false,
       "color": "#4a9eff",
       "deadzone": 0.1,
       "diskSize": 80,
@@ -120,22 +70,61 @@
         "left": "X-"
       },
       "rect": {
-        "x": 211,
-        "y": 315,
-        "w": 396,
-        "h": 393
+        "x": 144,
+        "y": 146,
+        "w": 470,
+        "h": 470
       }
     },
     {
-      "id": "widget-1771596857996-1ec84",
-      "kind": "mode-button",
-      "label": "Mode",
-      "topic": "/cmd/mode",
+      "id": "ctrl-rotation",
+      "kind": "joystick",
+      "binding": "rot",
+      "label": "",
+      "topic": "/cmd/joystick_rxry",
+      "showTopicInfo": false,
+      "color": "#f97316",
+      "deadzone": 0.1,
+      "diskSize": 80,
+      "labels": {
+        "top": "Y+",
+        "right": "X+",
+        "bottom": "Y-",
+        "left": "X-"
+      },
       "rect": {
-        "x": 319,
-        "y": 47,
-        "w": 288,
-        "h": 112
+        "x": 640,
+        "y": 146,
+        "w": 470,
+        "h": 470
+      }
+    },
+    {
+      "id": "ctrl-gripper",
+      "kind": "gripper-control",
+      "label": "Gripper",
+      "topic": "/cmd/gripper",
+      "showAdvancedControls": true,
+      "rect": {
+        "x": 24,
+        "y": 16,
+        "w": 300,
+        "h": 108
+      }
+    },
+    {
+      "id": "ctrl-max-velocity",
+      "kind": "max-velocity",
+      "label": "velocity",
+      "topic": "/cmd/max_velocity",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "rect": {
+        "x": 334,
+        "y": 620,
+        "w": 914,
+        "h": 92
       }
     }
   ],
@@ -144,5 +133,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

@@ -1,0 +1,72 @@
+{
+  "name": "visual_servoing_monitor",
+  "widgets": [
+    {
+      "id": "servo-monitor-title",
+      "kind": "text",
+      "label": "Text",
+      "topic": "/ui/text",
+      "text": "Visual Servoing Monitor",
+      "fontSize": 26,
+      "align": "left",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "w": 420,
+        "h": 56
+      }
+    },
+    {
+      "id": "servo-monitor-back",
+      "kind": "navigation-button",
+      "label": "Control",
+      "topic": "/ui/navigation/visual_servoing",
+      "targetScreenId": "visual_servoing",
+      "icon": "home",
+      "rect": {
+        "x": 1080,
+        "y": 20,
+        "w": 180,
+        "h": 58
+      }
+    },
+    {
+      "id": "servo-topic-monitor",
+      "kind": "topic-monitor",
+      "label": "ROS Topic Monitor",
+      "topic": "/ui/visual_servoing/topics",
+      "topics": [
+        {
+          "label": "AprilTag detections",
+          "topic": "/tag_detections",
+          "messageType": "extender_msgs/msg/SharedControlGoalArray"
+        },
+        {
+          "label": "Velocity command",
+          "topic": "/visual_servoing/velocity_command",
+          "messageType": "geometry_msgs/msg/TwistStamped"
+        },
+        {
+          "label": "Servo error",
+          "topic": "/visual_servoing/error_TAGtoTAGd",
+          "messageType": "geometry_msgs/msg/TwistStamped"
+        }
+      ],
+      "showSummary": true,
+      "showRaw": false,
+      "staleAfterMs": 2000,
+      "rect": {
+        "x": 20,
+        "y": 100,
+        "w": 1240,
+        "h": 600
+      }
+    }
+  ],
+  "poses": [],
+  "canvas": {
+    "presetId": "hd",
+    "runtimeMode": "fit"
+  },
+  "updatedAt": "2026-07-09T00:00:00.000Z"
+}

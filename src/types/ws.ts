@@ -37,7 +37,18 @@ export type WsMeasureResultMessage = {
   updated_at_ms: number | null;
 };
 
+export type WsTopicSnapshotMessage = {
+  type: "topic_snapshot";
+  topic: string;
+  message_type: string;
+  updated_at_ms: number | null;
+  revision: number;
+  data: unknown;
+  error: string | null;
+};
+
 export type WsIncoming =
   | WsStateMessage
   | WsEventMessage
-  | WsMeasureResultMessage;
+  | WsMeasureResultMessage
+  | WsTopicSnapshotMessage;

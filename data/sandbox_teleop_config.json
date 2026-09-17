@@ -2,7 +2,7 @@
   "name": "sandbox_teleop_config",
   "widgets": [
     {
-      "id": "pet-cfg-lin-gain",
+      "id": "sandbox-cfg-lin-gain",
       "kind": "max-velocity",
       "label": "Translation Gain",
       "topic": "/teleop_config/translation_gain",
@@ -17,7 +17,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-gain",
+      "id": "sandbox-cfg-ang-gain",
       "kind": "max-velocity",
       "label": "Rotation Gain",
       "topic": "/teleop_config/rotation_gain",
@@ -32,7 +32,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-scale-x",
+      "id": "sandbox-cfg-lin-scale-x",
       "kind": "max-velocity",
       "label": "Linear X",
       "topic": "/teleop_config/linear_scale_x",
@@ -47,7 +47,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-scale-x",
+      "id": "sandbox-cfg-ang-scale-x",
       "kind": "max-velocity",
       "label": "Angular X",
       "topic": "/teleop_config/angular_scale_x",
@@ -62,7 +62,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-scale-y",
+      "id": "sandbox-cfg-lin-scale-y",
       "kind": "max-velocity",
       "label": "Linear Y",
       "topic": "/teleop_config/linear_scale_y",
@@ -77,7 +77,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-scale-y",
+      "id": "sandbox-cfg-ang-scale-y",
       "kind": "max-velocity",
       "label": "Angular Y",
       "topic": "/teleop_config/angular_scale_y",
@@ -92,7 +92,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-scale-z",
+      "id": "sandbox-cfg-lin-scale-z",
       "kind": "max-velocity",
       "label": "Linear Z",
       "topic": "/teleop_config/linear_scale_z",
@@ -107,7 +107,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-scale-z",
+      "id": "sandbox-cfg-ang-scale-z",
       "kind": "max-velocity",
       "label": "Angular Z",
       "topic": "/teleop_config/angular_scale_z",
@@ -122,7 +122,7 @@
       }
     },
     {
-      "id": "pet-cfg-swap-xy",
+      "id": "sandbox-cfg-swap-xy",
       "kind": "button",
       "label": "Swap XY",
       "topic": "/teleop_config/swap_xy",
@@ -136,7 +136,7 @@
       }
     },
     {
-      "id": "pet-cfg-save-explorer",
+      "id": "sandbox-cfg-save-explorer",
       "kind": "button",
       "label": "Save Explorer",
       "topic": "/teleop_config/save_profile",
@@ -150,7 +150,7 @@
       }
     },
     {
-      "id": "pet-cfg-reset",
+      "id": "sandbox-cfg-reset",
       "kind": "button",
       "label": "Reset",
       "topic": "/teleop_config/reset_defaults",
@@ -164,7 +164,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-x",
+      "id": "sandbox-cfg-lin-x",
       "kind": "button",
       "label": "Invert Linear X",
       "topic": "/teleop_config/invert_linear_x",
@@ -178,7 +178,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-y",
+      "id": "sandbox-cfg-lin-y",
       "kind": "button",
       "label": "Invert Linear Y",
       "topic": "/teleop_config/invert_linear_y",
@@ -192,7 +192,7 @@
       }
     },
     {
-      "id": "pet-cfg-lin-z",
+      "id": "sandbox-cfg-lin-z",
       "kind": "button",
       "label": "Invert Linear Z",
       "topic": "/teleop_config/invert_linear_z",
@@ -206,7 +206,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-x",
+      "id": "sandbox-cfg-ang-x",
       "kind": "button",
       "label": "Invert Angular X",
       "topic": "/teleop_config/invert_angular_x",
@@ -220,7 +220,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-y",
+      "id": "sandbox-cfg-ang-y",
       "kind": "button",
       "label": "Invert Angular Y",
       "topic": "/teleop_config/invert_angular_y",
@@ -234,7 +234,7 @@
       }
     },
     {
-      "id": "pet-cfg-ang-z",
+      "id": "sandbox-cfg-ang-z",
       "kind": "button",
       "label": "Invert Angular Z",
       "topic": "/teleop_config/invert_angular_z",
@@ -253,5 +253,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-24T10:16:24.039Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

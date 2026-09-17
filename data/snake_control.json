@@ -1,0 +1,76 @@
+{
+  "name": "snake_control",
+  "widgets": [
+    {
+      "id": "snake-title",
+      "kind": "text",
+      "label": "Snake Control",
+      "topic": "/ui/title/snake_control",
+      "text": "Snake Control",
+      "fontSize": 30,
+      "align": "left",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "w": 420,
+        "h": 58
+      }
+    },
+    {
+      "id": "snake-mode-toggle",
+      "kind": "mode-button",
+      "label": "B1 / B2",
+      "topic": "/cmd/mode",
+      "rect": {
+        "x": 210,
+        "y": 116,
+        "w": 210,
+        "h": 76
+      }
+    },
+    {
+      "id": "snake-hold",
+      "kind": "momentary-ros-message",
+      "label": "Hold Snake",
+      "topic": "/activate_snake",
+      "messageType": "std_msgs/msg/Bool",
+      "pressedPayload": "{data: true}",
+      "releasedPayload": "{data: false}",
+      "rect": {
+        "x": 860,
+        "y": 116,
+        "w": 220,
+        "h": 76
+      }
+    },
+    {
+      "id": "snake-joystick",
+      "kind": "joystick",
+      "binding": "joy",
+      "label": "Joystick",
+      "topic": "/cmd/joystick",
+      "showTopicInfo": false,
+      "color": "#4a9eff",
+      "deadzone": 0.1,
+      "diskSize": 96,
+      "labels": {
+        "top": "Haut",
+        "right": "Droite",
+        "bottom": "Bas",
+        "left": "Gauche"
+      },
+      "rect": {
+        "x": 430,
+        "y": 271,
+        "w": 420,
+        "h": 420
+      }
+    }
+  ],
+  "poses": [],
+  "canvas": {
+    "presetId": "hd",
+    "runtimeMode": "fit"
+  },
+  "updatedAt": "2026-07-09T14:00:01.960Z"
+}

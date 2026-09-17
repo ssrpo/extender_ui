@@ -21,6 +21,10 @@ const SANDBOX_APP_ID = "application-95a8";
 const SANDBOX_APP_NAME = "SandboxV0.0";
 const SANDBOX_CONTROL_SCREEN_ID = "sandbox_control";
 const SANDBOX_TELEOP_CONFIG_SCREEN_ID = "sandbox_teleop_config";
+const CONTROL_PANEL_SCREEN_ID = "control_panel";
+const SNAKE_CONTROL_SCREEN_ID = "snake_control";
+const VISUAL_SERVOING_SCREEN_ID = "visual_servoing";
+const VISUAL_SERVOING_MONITOR_SCREEN_ID = "visual_servoing_monitor";
 const PEPR_PETANQUE_APP_ID = "application-a50f";
 const PEPR_PETANQUE_APP_NAME = "PEPR-Petanque";
 const PLAY_PETANQUE_APP_ID = "application-play-petanque";
@@ -86,6 +90,52 @@ const ensurePetanqueTeleopConfigScreen = (application: ApplicationConfig): Appli
     ...application,
     screenIds: normalizedScreenIds,
     homeScreenId: nextHomeScreenId,
+  };
+};
+
+const ensureAdminDemoScreens = (application: ApplicationConfig): ApplicationConfig => {
+  const isAdminApplication =
+    application.id === ADMIN_DEMO_APP_ID ||
+    application.name.trim().toLowerCase() === ADMIN_DEMO_APP_NAME.toLowerCase();
+  if (!isAdminApplication) return application;
+
+  const screenIds = uniqStrings([...application.screenIds, ...ADMIN_DEMO_SCREEN_IDS]);
+  const homeScreenId =
+    application.homeScreenId && screenIds.includes(application.homeScreenId)
+      ? application.homeScreenId
+      : ADMIN_DEMO_HOME_SCREEN_ID;
+
+  return {
+    ...application,
+    screenIds,
+    homeScreenId,
+  };
+};
+
+const ensureSandboxDemoScreens = (application: ApplicationConfig): ApplicationConfig => {
+  const isSandboxApplication =
+    application.id === SANDBOX_APP_ID ||
+    application.name.trim().toLowerCase() === SANDBOX_APP_NAME.toLowerCase();
+  if (!isSandboxApplication) return application;
+
+  const screenIds = uniqStrings([
+    ...application.screenIds,
+    SANDBOX_CONTROL_SCREEN_ID,
+    SANDBOX_TELEOP_CONFIG_SCREEN_ID,
+    CONTROL_PANEL_SCREEN_ID,
+    SNAKE_CONTROL_SCREEN_ID,
+    VISUAL_SERVOING_SCREEN_ID,
+    VISUAL_SERVOING_MONITOR_SCREEN_ID,
+  ]);
+  const homeScreenId =
+    application.homeScreenId && screenIds.includes(application.homeScreenId)
+      ? application.homeScreenId
+      : SANDBOX_CONTROL_SCREEN_ID;
+
+  return {
+    ...application,
+    screenIds,
+    homeScreenId,
   };
 };
 
@@ -157,7 +207,14 @@ const createDefaultAdminApplication = (): ApplicationConfig => ({
 const createDefaultSandboxApplication = (): ApplicationConfig => ({
   id: SANDBOX_APP_ID,
   name: SANDBOX_APP_NAME,
-  screenIds: [SANDBOX_CONTROL_SCREEN_ID, SANDBOX_TELEOP_CONFIG_SCREEN_ID],
+  screenIds: [
+    SANDBOX_CONTROL_SCREEN_ID,
+    SANDBOX_TELEOP_CONFIG_SCREEN_ID,
+    CONTROL_PANEL_SCREEN_ID,
+    SNAKE_CONTROL_SCREEN_ID,
+    VISUAL_SERVOING_SCREEN_ID,
+    VISUAL_SERVOING_MONITOR_SCREEN_ID,
+  ],
   homeScreenId: SANDBOX_CONTROL_SCREEN_ID,
   updatedAt: new Date().toISOString(),
 });
@@ -168,7 +225,7 @@ const ensureSandboxApplication = (applications: ApplicationConfig[]): Applicatio
       application.id === SANDBOX_APP_ID ||
       application.name.trim().toLowerCase() === SANDBOX_APP_NAME.toLowerCase()
   );
-  if (existing) return applications;
+  if (existing) return applications.map(ensureSandboxDemoScreens);
 
   return [...applications, createDefaultSandboxApplication()].sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -226,6 +283,8 @@ export function loadApplicationsFromLocalStorage(): ApplicationConfig[] {
           parsed
             .map(sanitizeApplication)
             .filter((item): item is ApplicationConfig => item !== null)
+            .map(ensureAdminDemoScreens)
+            .map(ensureSandboxDemoScreens)
             .map(ensurePetanqueTeleopConfigScreen)
             .sort((a, b) => a.name.localeCompare(b.name))
         )
@@ -261,7 +320,9 @@ export function upsertApplication(
     homeScreenId: nextApplication.homeScreenId?.trim() || null,
     updatedAt: new Date().toISOString(),
   };
-  const normalizedWithDefaults = ensurePetanqueTeleopConfigScreen(normalized);
+  const normalizedWithDefaults = ensurePetanqueTeleopConfigScreen(
+    ensureSandboxDemoScreens(ensureAdminDemoScreens(normalized))
+  );
 
   const index = applications.findIndex((application) => application.id === normalizedWithDefaults.id);
   if (index === -1) {
@@ -336,5 +397,7 @@ export async function syncApplicationsFromFolder(
     merged = upsertApplication(merged, application);
   }
 
-  return ensureSandboxApplication(ensurePlayPetanqueApplication(merged));
+  return ensureSandboxApplication(ensurePlayPetanqueApplication(merged)).map(
+    ensureSandboxDemoScreens
+  );
 }

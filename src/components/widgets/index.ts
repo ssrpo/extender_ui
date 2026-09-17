@@ -4,6 +4,8 @@ export { TogglePublisherFields } from "./togglePublisher/TogglePublisherFields";
 export { TogglePublisherWidget } from "./togglePublisher/TogglePublisherWidget";
 export { RosMessageToggleFields } from "./rosMessageToggle/RosMessageToggleFields";
 export { RosMessageToggleWidget } from "./rosMessageToggle/RosMessageToggleWidget";
+export { MomentaryRosMessageFields } from "./momentaryRosMessage/MomentaryRosMessageFields";
+export { MomentaryRosMessageWidget } from "./momentaryRosMessage/MomentaryRosMessageWidget";
 export {
   ActionButtonWidget,
   CurvesWidget,
@@ -17,6 +19,7 @@ export {
   NavigationButtonWidget,
   RosbagControlWidget,
   StreamDisplayWidget,
+  TopicMonitorWidget,
   ThrowDrawWidget,
   TextareaWidget,
   TextWidget,
@@ -45,11 +48,14 @@ export {
   type MagnetControlWidget as MagnetControlWidgetModel,
   type TogglePublisherWidget as TogglePublisherWidgetModel,
   type RosMessageToggleWidget as RosMessageToggleWidgetModel,
+  type MomentaryRosMessageWidget as MomentaryRosMessageWidgetModel,
   type StreamDisplayWidget as StreamDisplayWidgetModel,
   type ThrowDrawWidget as ThrowDrawWidgetModel,
   type CurvesWidget as CurvesWidgetModel,
   type DrinkWidget as DrinkWidgetModel,
   type LogsWidget as LogsWidgetModel,
+  type TopicMonitorWidget as TopicMonitorWidgetModel,
+  type TopicMonitorTopic,
   type NavigationOrientation,
   type StreamFitMode,
   type LogLevelFilter,
@@ -105,6 +111,16 @@ export {
   type RosMessageTogglePreset,
   type RosMessageToggleWsMessage,
 } from "./rosMessageToggle/model";
+export {
+  buildMomentaryRosMessageCliExample,
+  buildMomentaryRosMessageWsMessage,
+  DEFAULT_MOMENTARY_ROS_MESSAGE_PRESSED_PAYLOAD,
+  DEFAULT_MOMENTARY_ROS_MESSAGE_RELEASED_PAYLOAD,
+  DEFAULT_MOMENTARY_ROS_MESSAGE_TYPE,
+  normalizeMomentaryRosMessageWidget,
+  type MomentaryRosMessageState,
+  type MomentaryRosMessageWsMessage,
+} from "./momentaryRosMessage/model";
 export {
   CANVAS_PRESETS,
   DEFAULT_CANVAS_SETTINGS,

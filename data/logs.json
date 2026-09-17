@@ -66,6 +66,7 @@
       "label": "Insert Marker",
       "topic": "/logs/marker",
       "payload": "marker",
+      "tone": "default",
       "rect": {
         "x": 900,
         "y": 570,
@@ -76,8 +77,8 @@
   ],
   "poses": [],
   "canvas": {
-    "presetId": "tablet",
+    "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.148Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

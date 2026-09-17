@@ -10,6 +10,7 @@ import {
   LogsWidget,
   MagnetControlWidget,
   MaxVelocityWidget,
+  MomentaryRosMessageWidget,
   ModeButtonWidget,
   NavigationBarWidget,
   NavigationButtonWidget,
@@ -20,11 +21,13 @@ import {
   StreamDisplayWidget,
   TextareaWidget,
   TextWidget,
+  TopicMonitorWidget,
   TogglePublisherWidget,
   ThrowDrawWidget,
   type CanvasWidget,
   type WidgetConfiguration,
   buildRosMessageToggleWsMessage,
+  buildMomentaryRosMessageWsMessage,
   buildTogglePublisherWsMessage,
 } from "../../components/widgets";
 import { wsClient } from "../../services/wsClient";
@@ -640,6 +643,27 @@ export function RuntimeWidgetRenderer({
     );
   }
 
+  if (widget.kind === "momentary-ros-message") {
+    return (
+      <MomentaryRosMessageWidget
+        key={widget.id}
+        widget={widget}
+        selected={false}
+        onSelect={NOOP_SELECT}
+        onRectChange={noopRectChange}
+        onLabelChange={noopTextChange}
+        onPress={() => {
+          wsClient.send(buildMomentaryRosMessageWsMessage(widget, "pressed"));
+          markWidgetPulse(widget.id);
+        }}
+        onRelease={() => {
+          wsClient.send(buildMomentaryRosMessageWsMessage(widget, "released"));
+          markWidgetPulse(widget.id);
+        }}
+      />
+    );
+  }
+
   if (widget.kind === "stream-display") {
     const runtimeStreamWidget = runtimeWidget as Extract<CanvasWidget, { kind: "stream-display" }>;
     const url =
@@ -707,6 +731,19 @@ export function RuntimeWidgetRenderer({
   if (widget.kind === "logs") {
     return (
       <LogsWidget
+        key={widget.id}
+        widget={widget}
+        selected={false}
+        onSelect={NOOP_SELECT}
+        onRectChange={noopRectChange}
+        onLabelChange={noopTextChange}
+      />
+    );
+  }
+
+  if (widget.kind === "topic-monitor") {
+    return (
+      <TopicMonitorWidget
         key={widget.id}
         widget={widget}
         selected={false}

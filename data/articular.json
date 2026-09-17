@@ -54,6 +54,7 @@
       "label": "Send Joint Goal",
       "topic": "/cmd/joint_goal",
       "payload": "execute",
+      "tone": "default",
       "rect": {
         "x": 20,
         "y": 340,
@@ -67,6 +68,7 @@
       "label": "Stop Motion",
       "topic": "/cmd/joint_stop",
       "payload": "stop",
+      "tone": "default",
       "rect": {
         "x": 240,
         "y": 340,
@@ -80,7 +82,7 @@
       "label": "Joint Speed Scale",
       "topic": "/cmd/joint_speed_scale",
       "min": 0,
-      "max": 2,
+      "max": 3,
       "step": 0.01,
       "rect": {
         "x": 20,
@@ -92,8 +94,8 @@
   ],
   "poses": [],
   "canvas": {
-    "presetId": "tablet",
+    "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.148Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

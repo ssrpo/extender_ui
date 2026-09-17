@@ -3,8 +3,12 @@
   "name": "SandboxV0.0",
   "screenIds": [
     "sandbox_control",
-    "sandbox_teleop_config"
+    "sandbox_teleop_config",
+    "control_panel",
+    "snake_control",
+    "visual_servoing",
+    "visual_servoing_monitor"
   ],
   "homeScreenId": "sandbox_control",
-  "updatedAt": "2026-03-24T10:18:32.671Z"
+  "updatedAt": "2026-07-09T14:15:59.915Z"
 }

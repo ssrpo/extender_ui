@@ -23,9 +23,9 @@
       "payload": "activate_throw",
       "tone": "accent",
       "rect": {
-        "x": 178,
+        "x": 180,
         "y": 25,
-        "w": 150,
+        "w": 170,
         "h": 58
       }
     },
@@ -37,8 +37,8 @@
       "payload": "go_to_start",
       "tone": "success",
       "rect": {
-        "x": 494,
-        "y": 25,
+        "x": 683,
+        "y": 20,
         "w": 150,
         "h": 58
       }
@@ -51,10 +51,85 @@
       "payload": "throw",
       "tone": "danger",
       "rect": {
-        "x": 336,
+        "x": 360,
         "y": 25,
         "w": 150,
         "h": 58
+      }
+    },
+    {
+      "id": "play-lancer-test-loop",
+      "kind": "button",
+      "label": "TEST",
+      "topic": "/petanque_state_machine/change_state",
+      "payload": "test_loop",
+      "tone": "accent",
+      "rect": {
+        "x": 850,
+        "y": 20,
+        "w": 190,
+        "h": 58
+      }
+    },
+    {
+      "id": "play-lancer-pointer",
+      "kind": "button",
+      "label": "Pointer",
+      "topic": "/petanque_throw/alpha_preset",
+      "payload": "pointer",
+      "tone": "success",
+      "rect": {
+        "x": 852,
+        "y": 102,
+        "w": 190,
+        "h": 52
+      }
+    },
+    {
+      "id": "play-lancer-tirer",
+      "kind": "button",
+      "label": "Tirer",
+      "topic": "/petanque_throw/alpha_preset",
+      "payload": "tirer",
+      "tone": "danger",
+      "rect": {
+        "x": 1067,
+        "y": 102,
+        "w": 190,
+        "h": 52
+      }
+    },
+    {
+      "id": "play-lancer-alpha",
+      "kind": "max-velocity",
+      "label": "Alpha",
+      "topic": "/petanque_throw/alpha",
+      "min": 0,
+      "max": 40,
+      "step": 0.01,
+      "rect": {
+        "x": 20,
+        "y": 102,
+        "w": 401,
+        "h": 157
+      },
+      "unsafeThreshold": 20,
+      "endpointLeftLabel": "Tirer",
+      "endpointRightLabel": "Pointer",
+      "bubbleMode": "degrees-unit"
+    },
+    {
+      "id": "play-lancer-drink",
+      "kind": "drink",
+      "label": "Drink",
+      "topic": "/ui/drink",
+      "videoUrl": "https://www.youtube.com/shorts/JQbLM2BUcLg",
+      "autoCloseOnEnd": true,
+      "rect": {
+        "x": 1063,
+        "y": 18,
+        "w": 197,
+        "h": 72
       }
     },
     {
@@ -75,81 +150,6 @@
         "w": 1159,
         "h": 385
       }
-    },
-    {
-      "id": "widget-1773151004387-65104",
-      "kind": "max-velocity",
-      "label": "Alpha",
-      "topic": "/petanque_throw/alpha",
-      "min": 0,
-      "max": 40,
-      "step": 0.01,
-      "rect": {
-        "x": 20,
-        "y": 102,
-        "w": 401,
-        "h": 157
-      },
-      "unsafeThreshold": 20,
-      "endpointLeftLabel": "Tirer",
-      "endpointRightLabel": "Pointer",
-      "bubbleMode": "degrees-unit"
-    },
-    {
-      "id": "widget-1773160339405-ed04c",
-      "kind": "drink",
-      "label": "Drink",
-      "topic": "/ui/drink",
-      "videoUrl": "https://www.youtube.com/shorts/JQbLM2BUcLg",
-      "autoCloseOnEnd": true,
-      "rect": {
-        "x": 1126,
-        "y": 25,
-        "w": 150,
-        "h": 58
-      }
-    },
-    {
-      "id": "play-lancer-test-loop",
-      "kind": "button",
-      "label": "TEST",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "test_loop",
-      "tone": "accent",
-      "rect": {
-        "x": 652,
-        "y": 25,
-        "w": 150,
-        "h": 58
-      }
-    },
-    {
-      "id": "play-lancer-pointer",
-      "kind": "button",
-      "label": "Pointer",
-      "topic": "/petanque_throw/alpha_preset",
-      "payload": "pointer",
-      "tone": "success",
-      "rect": {
-        "x": 810,
-        "y": 25,
-        "w": 150,
-        "h": 58
-      }
-    },
-    {
-      "id": "play-lancer-tirer",
-      "kind": "button",
-      "label": "Tirer",
-      "topic": "/petanque_throw/alpha_preset",
-      "payload": "tirer",
-      "tone": "danger",
-      "rect": {
-        "x": 968,
-        "y": 25,
-        "w": 150,
-        "h": 58
-      }
     }
   ],
   "poses": [],
@@ -157,5 +157,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

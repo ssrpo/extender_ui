@@ -2,52 +2,22 @@
   "name": "sandbox_control",
   "widgets": [
     {
-      "id": "pet-state-teleop",
-      "kind": "button",
-      "label": "Teleop",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "teleop",
-      "rect": {
-        "x": 20,
-        "y": 21,
-        "w": 110,
-        "h": 58
-      }
-    },
-    {
-      "id": "pet-state-go-start",
-      "kind": "button",
-      "label": "HOME",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "go_to_start",
-      "rect": {
-        "x": 147,
-        "y": 21,
-        "w": 92,
-        "h": 58
-      }
-    },
-    {
-      "id": "pet-speed",
+      "id": "sandbox-max-velocity",
       "kind": "max-velocity",
-      "label": "Speed",
-      "topic": "/petanque_throw/total_duration",
-      "min": 0.9,
-      "max": 3,
-      "step": 0.1,
+      "label": "Max Velocity",
+      "topic": "/cmd/max_velocity",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
       "rect": {
-        "x": 281,
-        "y": 116,
-        "w": 359,
-        "h": 146
-      },
-      "reverseDirection": true,
-      "endpointLeftLabel": "Slow",
-      "endpointRightLabel": "Fast",
-      "bubbleMode": "power"
+        "x": 279,
+        "y": 95,
+        "w": 382,
+        "h": 159
+      }
     },
     {
-      "id": "widget-1772022467451-82a89",
+      "id": "sandbox-rotation",
       "kind": "joystick",
       "binding": "rot",
       "label": "Rotation",
@@ -70,7 +40,7 @@
       }
     },
     {
-      "id": "widget-1772022635176-7136a",
+      "id": "sandbox-translation",
       "kind": "joystick",
       "binding": "joy",
       "label": "Translation",
@@ -93,7 +63,7 @@
       }
     },
     {
-      "id": "widget-1772022867304-b6279",
+      "id": "sandbox-mode",
       "kind": "mode-button",
       "label": "Mode",
       "topic": "/cmd/mode",
@@ -105,7 +75,7 @@
       }
     },
     {
-      "id": "widget-1772023042956-44680",
+      "id": "sandbox-rz",
       "kind": "slider",
       "binding": "rz",
       "label": "RZ",
@@ -125,7 +95,7 @@
       }
     },
     {
-      "id": "widget-1772023858581-53021",
+      "id": "sandbox-z",
       "kind": "slider",
       "binding": "z",
       "label": "Z",
@@ -145,27 +115,13 @@
       }
     },
     {
-      "id": "pet-magnet",
-      "kind": "magnet-control",
-      "label": "Magnet",
-      "topic": "/hub/digital_output",
-      "onPayload": "electromagnet_on",
-      "offPayload": "electromagnet_off",
-      "rect": {
-        "x": 1072,
-        "y": 17,
-        "w": 180,
-        "h": 92
-      }
-    },
-    {
-      "id": "pet-gripper",
+      "id": "sandbox-gripper",
       "kind": "gripper-control",
       "label": "Gripper",
       "topic": "/cmd/gripper",
       "showAdvancedControls": false,
       "rect": {
-        "x": 859,
+        "x": 848,
         "y": 17,
         "w": 188,
         "h": 92
@@ -180,25 +136,10 @@
       "onPayload": "{data: 1.0}",
       "offPayload": "{data: 0.0}",
       "rect": {
-        "x": 640,
+        "x": 1048,
         "y": 17,
         "w": 188,
         "h": 92
-      }
-    },
-    {
-      "id": "widget-1777993123607-1d1c3",
-      "kind": "ros-message-toggle",
-      "label": "ROS Toggle",
-      "topic": "/ui/ros_toggle",
-      "messageType": "std_msgs/msg/Int32MultiArray",
-      "onPayload": "{data: [13, 1]}",
-      "offPayload": "{data: [13, 0]}",
-      "rect": {
-        "x": 394,
-        "y": 17,
-        "w": 203,
-        "h": 91
       }
     }
   ],
@@ -207,5 +148,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-05-05T15:02:06.803Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

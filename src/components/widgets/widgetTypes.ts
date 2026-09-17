@@ -12,6 +12,12 @@ export type StreamFitMode = "contain" | "cover";
 export type LogLevelFilter = "all" | "info" | "warn" | "error";
 export type TogglePublisherOutputMode = "numeric" | "boolean";
 
+export type TopicMonitorTopic = {
+  label: string;
+  topic: string;
+  messageType: string;
+};
+
 export type WidgetKind =
   | "joystick"
   | "slider"
@@ -29,11 +35,13 @@ export type WidgetKind =
   | "magnet-control"
   | "toggle-publisher"
   | "ros-message-toggle"
+  | "momentary-ros-message"
   | "stream-display"
   | "throw-draw"
   | "drink"
   | "curves"
-  | "logs";
+  | "logs"
+  | "topic-monitor";
 
 type WidgetBase = {
   id: string;
@@ -161,6 +169,13 @@ export type RosMessageToggleWidget = WidgetBase & {
   offPayload: string;
 };
 
+export type MomentaryRosMessageWidget = WidgetBase & {
+  kind: "momentary-ros-message";
+  messageType: string;
+  pressedPayload: string;
+  releasedPayload: string;
+};
+
 export type StreamDisplayWidget = WidgetBase & {
   kind: "stream-display";
   source: StreamSource;
@@ -211,6 +226,15 @@ export type LogsWidget = WidgetBase & {
   showTimestamp: boolean;
 };
 
+export type TopicMonitorWidget = WidgetBase & {
+  kind: "topic-monitor";
+  topics: TopicMonitorTopic[];
+  showSummary?: boolean;
+  showDetails?: boolean;
+  showRaw: boolean;
+  staleAfterMs?: number;
+};
+
 export type CanvasWidget =
   | JoystickWidget
   | SliderWidget
@@ -228,11 +252,13 @@ export type CanvasWidget =
   | MagnetControlWidget
   | TogglePublisherWidget
   | RosMessageToggleWidget
+  | MomentaryRosMessageWidget
   | StreamDisplayWidget
   | ThrowDrawWidget
   | DrinkWidget
   | CurvesWidget
-  | LogsWidget;
+  | LogsWidget
+  | TopicMonitorWidget;
 
 export const DEFAULT_WIDGETS: CanvasWidget[] = [
   {

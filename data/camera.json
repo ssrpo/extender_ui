@@ -2,39 +2,103 @@
   "name": "camera",
   "widgets": [
     {
-      "id": "widget-1771021824555-03a21",
-      "kind": "stream-display",
-      "label": "Camera Stream",
-      "topic": "/ui/stream",
-      "source": "camera",
-      "streamUrl": "webrtc://localhost:8001/stream",
+      "id": "cam-title",
+      "kind": "text",
+      "label": "Text",
+      "topic": "/ui/text",
+      "text": "Camera & Vision",
+      "fontSize": 26,
+      "align": "left",
       "rect": {
-        "x": 230,
-        "y": 128,
-        "w": 360,
-        "h": 260
+        "x": 20,
+        "y": 20,
+        "w": 340,
+        "h": 56
       }
     },
     {
-      "id": "widget-1771021835920-629de",
-      "kind": "text",
-      "label": "camera",
-      "topic": "/ui/text",
-      "text": "cameraaaa",
-      "fontSize": 20,
-      "align": "left",
+      "id": "cam-main",
+      "kind": "stream-display",
+      "label": "Main Camera",
+      "topic": "/camera/main",
+      "source": "camera",
+      "streamUrl": "webrtc://localhost:8001/stream",
+      "fitMode": "cover",
+      "showStatus": true,
+      "showUrl": false,
+      "overlayText": "main stream",
       "rect": {
-        "x": 661,
-        "y": 69,
-        "w": 280,
-        "h": 64
+        "x": 20,
+        "y": 90,
+        "w": 760,
+        "h": 510
+      }
+    },
+    {
+      "id": "cam-aux",
+      "kind": "stream-display",
+      "label": "Visualization",
+      "topic": "/camera/overlay",
+      "source": "visualization",
+      "streamUrl": "webrtc://localhost:8001/stream",
+      "fitMode": "contain",
+      "showStatus": true,
+      "showUrl": false,
+      "overlayText": "vision overlay",
+      "rect": {
+        "x": 800,
+        "y": 90,
+        "w": 460,
+        "h": 300
+      }
+    },
+    {
+      "id": "cam-settings",
+      "kind": "textarea",
+      "label": "Camera Settings",
+      "topic": "/camera/settings",
+      "text": "TODO backend integration:\n- exposure\n- white balance\n- camera profile",
+      "fontSize": 14,
+      "rect": {
+        "x": 800,
+        "y": 410,
+        "w": 460,
+        "h": 190
+      }
+    },
+    {
+      "id": "cam-snapshot",
+      "kind": "button",
+      "label": "Snapshot",
+      "topic": "/camera/action",
+      "payload": "snapshot",
+      "tone": "default",
+      "rect": {
+        "x": 20,
+        "y": 620,
+        "w": 160,
+        "h": 56
+      }
+    },
+    {
+      "id": "cam-record",
+      "kind": "rosbag-control",
+      "label": "Record Camera",
+      "topic": "/rosbag/camera",
+      "bagName": "camera_session",
+      "autoTimestamp": true,
+      "rect": {
+        "x": 200,
+        "y": 620,
+        "w": 320,
+        "h": 170
       }
     }
   ],
   "poses": [],
   "canvas": {
     "presetId": "hd",
-    "runtimeMode": "left"
+    "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

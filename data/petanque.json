@@ -2,54 +2,87 @@
   "name": "petanque",
   "widgets": [
     {
+      "id": "pet-title",
+      "kind": "text",
+      "label": "Text",
+      "topic": "/ui/text",
+      "text": "Pétanque Control",
+      "fontSize": 26,
+      "align": "left",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "w": 360,
+        "h": 56
+      }
+    },
+    {
       "id": "pet-state-teleop",
       "kind": "button",
       "label": "Teleop",
       "topic": "/petanque_state_machine/change_state",
       "payload": "teleop",
+      "tone": "default",
       "rect": {
         "x": 20,
-        "y": 21,
-        "w": 110,
+        "y": 90,
+        "w": 170,
         "h": 58
       }
     },
     {
       "id": "pet-state-activate",
       "kind": "button",
-      "label": "START",
+      "label": "Start",
       "topic": "/petanque_state_machine/change_state",
       "payload": "activate_throw",
+      "tone": "accent",
       "rect": {
-        "x": 280,
-        "y": 21,
-        "w": 92,
+        "x": 202,
+        "y": 90,
+        "w": 210,
         "h": 58
       }
     },
     {
       "id": "pet-state-go-start",
       "kind": "button",
-      "label": "HOME",
+      "label": "Home",
       "topic": "/petanque_state_machine/change_state",
       "payload": "go_to_start",
+      "tone": "success",
       "rect": {
-        "x": 147,
-        "y": 21,
-        "w": 92,
+        "x": 424,
+        "y": 90,
+        "w": 190,
         "h": 58
       }
     },
     {
       "id": "pet-state-throw",
       "kind": "button",
-      "label": "THROW",
+      "label": "Throw",
       "topic": "/petanque_state_machine/change_state",
       "payload": "throw",
+      "tone": "danger",
       "rect": {
-        "x": 412,
-        "y": 21,
-        "w": 92,
+        "x": 626,
+        "y": 90,
+        "w": 150,
+        "h": 58
+      }
+    },
+    {
+      "id": "pet-state-pick-up",
+      "kind": "button",
+      "label": "Pick Up Ball",
+      "topic": "/petanque_state_machine/change_state",
+      "payload": "pick_up",
+      "tone": "accent",
+      "rect": {
+        "x": 788,
+        "y": 90,
+        "w": 150,
         "h": 58
       }
     },
@@ -59,11 +92,39 @@
       "label": "Stop",
       "topic": "/petanque_state_machine/change_state",
       "payload": "stop",
+      "tone": "danger",
       "rect": {
-        "x": 684,
-        "y": 21,
-        "w": 92,
+        "x": 950,
+        "y": 90,
+        "w": 150,
         "h": 58
+      }
+    },
+    {
+      "id": "pet-gripper",
+      "kind": "gripper-control",
+      "label": "Gripper",
+      "topic": "/cmd/gripper",
+      "showAdvancedControls": true,
+      "rect": {
+        "x": 950,
+        "y": 20,
+        "w": 146,
+        "h": 92
+      }
+    },
+    {
+      "id": "pet-magnet",
+      "kind": "magnet-control",
+      "label": "Magnet",
+      "topic": "/hub/digital_output",
+      "onPayload": "electromagnet_on",
+      "offPayload": "electromagnet_off",
+      "rect": {
+        "x": 1112,
+        "y": 20,
+        "w": 146,
+        "h": 92
       }
     },
     {
@@ -75,10 +136,10 @@
       "max": 3,
       "step": 0.1,
       "rect": {
-        "x": 241,
-        "y": 109,
-        "w": 308,
-        "h": 108
+        "x": 20,
+        "y": 166,
+        "w": 500,
+        "h": 92
       },
       "reverseDirection": true,
       "endpointLeftLabel": "Slow",
@@ -86,160 +147,35 @@
       "bubbleMode": "power"
     },
     {
-      "id": "widget-1772022467451-82a89",
-      "kind": "joystick",
-      "binding": "rot",
-      "label": "Rotation",
-      "topic": "/cmd/joystick_rxry",
-      "showTopicInfo": true,
-      "color": "#ff4d67",
-      "deadzone": 0.1,
-      "diskSize": 80,
-      "labels": {
-        "top": "RY+",
-        "right": "RX+",
-        "bottom": "RY-",
-        "left": "RX-"
-      },
-      "rect": {
-        "x": 802,
-        "y": 268,
-        "w": 435,
-        "h": 441
-      }
-    },
-    {
-      "id": "widget-1772022635176-7136a",
-      "kind": "joystick",
-      "binding": "joy",
-      "label": "Translation",
-      "topic": "/cmd/joystick",
-      "showTopicInfo": true,
-      "color": "#4a9eff",
-      "deadzone": 0.1,
-      "diskSize": 80,
-      "labels": {
-        "top": "Y+",
-        "right": "X+",
-        "bottom": "Y-",
-        "left": "X-"
-      },
-      "rect": {
-        "x": 255,
-        "y": 268,
-        "w": 429,
-        "h": 441
-      }
-    },
-    {
-      "id": "widget-1772022867304-b6279",
-      "kind": "mode-button",
-      "label": "Mode",
-      "topic": "/cmd/mode",
+      "id": "pet-notes",
+      "kind": "textarea",
+      "label": "Runbook",
+      "topic": "/petanque/runbook",
+      "text": "Recommended flow:\n1) Teleop\n2) Start\n3) Throw (or Pick Up Ball)\n\nStart triggers activate_throw and the state machine transitions to go_to_start.\nHome can be used to resend go_to_start if needed.\nStop is only enabled after Start (petanque mode active).\nTeleop returns manual control.\nUse Throw Speed to tune trajectory duration (mapped to /petanque_throw total_duration).",
+      "fontSize": 14,
       "rect": {
         "x": 20,
-        "y": 109,
-        "w": 173,
-        "h": 108
+        "y": 272,
+        "w": 500,
+        "h": 220
       }
     },
     {
-      "id": "widget-1772022904198-9534a",
-      "kind": "button",
-      "label": "PICK-UP",
-      "topic": "/petanque_state_machine/change_state",
-      "payload": "pick_up",
-      "tone": "default",
+      "id": "pet-rviz",
+      "kind": "stream-display",
+      "label": "RViz",
+      "topic": "/petanque/rviz",
+      "source": "rviz",
+      "streamUrl": "webrtc://localhost:8001/stream",
+      "fitMode": "contain",
+      "showStatus": true,
+      "showUrl": false,
+      "overlayText": "petanque trajectory",
       "rect": {
-        "x": 549,
-        "y": 21,
-        "w": 96,
-        "h": 58
-      }
-    },
-    {
-      "id": "widget-1772023042956-44680",
-      "kind": "slider",
-      "binding": "rz",
-      "label": "RZ",
-      "topic": "/cmd/joystick_rz",
-      "direction": "horizontal",
-      "showLabel": false,
-      "showTopicInfo": false,
-      "labelAlign": "center",
-      "min": -1,
-      "max": 1,
-      "step": 0.01,
-      "rect": {
-        "x": 802,
-        "y": 124,
-        "w": 435,
-        "h": 130
-      }
-    },
-    {
-      "id": "widget-1772023858581-53021",
-      "kind": "slider",
-      "binding": "z",
-      "label": "Z",
-      "topic": "/cmd/joystick_z",
-      "direction": "vertical",
-      "showLabel": false,
-      "showTopicInfo": false,
-      "labelAlign": "center",
-      "min": -1,
-      "max": 1,
-      "step": 0.01,
-      "rect": {
-        "x": 75,
-        "y": 268,
-        "w": 162,
-        "h": 422
-      }
-    },
-    {
-      "id": "widget-1772025284409-c596c",
-      "kind": "max-velocity",
-      "label": "Throw Angle",
-      "topic": "/petanque_throw/angle_between_start_and_finish",
-      "min": -0.26,
-      "max": 0.26,
-      "step": 0.005,
-      "rect": {
-        "x": 568,
-        "y": 109,
-        "w": 208,
-        "h": 108
-      },
-      "endpointLeftLabel": "Left",
-      "endpointRightLabel": "Right",
-      "bubbleMode": "degrees"
-    },
-    {
-      "id": "pet-magnet",
-      "kind": "magnet-control",
-      "label": "Magnet",
-      "topic": "/hub/digital_output",
-      "onPayload": "electromagnet_on",
-      "offPayload": "electromagnet_off",
-      "rect": {
-        "x": 1072,
-        "y": 17,
-        "w": 180,
-        "h": 92
-      }
-    },
-    {
-      "id": "pet-gripper",
-      "kind": "gripper-control",
-      "label": "Gripper",
-      "topic": "/cmd/gripper",
-      "showAdvancedControls": false,
-      "rect": {
-        "x": 848,
-        "y": 17,
-        "w": 188,
-        "h": 92
+        "x": 540,
+        "y": 166,
+        "w": 720,
+        "h": 420
       }
     }
   ],
@@ -248,5 +184,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-05-04T15:40:33.952Z"
+  "updatedAt": "2026-07-09T15:03:27.513Z"
 }

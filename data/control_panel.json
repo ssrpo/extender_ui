@@ -1,0 +1,247 @@
+{
+  "name": "control_panel",
+  "widgets": [
+    {
+      "id": "control-panel-title",
+      "kind": "text",
+      "label": "Text",
+      "topic": "/ui/text",
+      "text": "Control Panel",
+      "fontSize": 26,
+      "align": "left",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "w": 300,
+        "h": 56
+      }
+    },
+    {
+      "id": "control-panel-camera",
+      "kind": "stream-display",
+      "label": "Camera",
+      "topic": "/camera/play_petanque",
+      "source": "webcam",
+      "streamUrl": "webcam:///dev/video2",
+      "fitMode": "cover",
+      "showStatus": true,
+      "showUrl": false,
+      "overlayText": "webcam feed",
+      "rect": {
+        "x": 20,
+        "y": 90,
+        "w": 560,
+        "h": 400
+      },
+      "showWebcamPicker": true
+    },
+    {
+      "id": "control-panel-gripper",
+      "kind": "gripper-control",
+      "label": "Gripper",
+      "topic": "/cmd/gripper",
+      "showAdvancedControls": true,
+      "rect": {
+        "x": 20,
+        "y": 510,
+        "w": 260,
+        "h": 86
+      }
+    },
+    {
+      "id": "control-panel-servo-enable",
+      "kind": "ros-message-toggle",
+      "label": "Visual Servoing",
+      "topic": "/ui/visual_servoing/on",
+      "messageType": "std_msgs/msg/Bool",
+      "onPayload": "{data: true}",
+      "offPayload": "{data: false}",
+      "rect": {
+        "x": 300,
+        "y": 510,
+        "w": 280,
+        "h": 86
+      }
+    },
+    {
+      "id": "control-panel-servo-save",
+      "kind": "button",
+      "label": "Save Tag",
+      "topic": "/ui/visual_servoing/save",
+      "payload": "save",
+      "tone": "success",
+      "rect": {
+        "x": 20,
+        "y": 629,
+        "w": 260,
+        "h": 58
+      }
+    },
+    {
+      "id": "control-panel-open-monitor",
+      "kind": "navigation-button",
+      "label": "Monitor",
+      "topic": "/ui/navigation/visual_servoing_monitor",
+      "targetScreenId": "visual_servoing_monitor",
+      "icon": "arrow-right",
+      "rect": {
+        "x": 300,
+        "y": 629,
+        "w": 280,
+        "h": 58
+      }
+    },
+    {
+      "id": "control-panel-max-velocity",
+      "kind": "max-velocity",
+      "label": "Teleop Gain",
+      "topic": "/cmd/max_velocity",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "rect": {
+        "x": 610,
+        "y": 20,
+        "w": 640,
+        "h": 145
+      }
+    },
+    {
+      "id": "control-panel-z",
+      "kind": "slider",
+      "binding": "z",
+      "label": "Z",
+      "topic": "/cmd/joystick_z",
+      "direction": "vertical",
+      "showLabel": true,
+      "showTopicInfo": false,
+      "labelAlign": "center",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "rect": {
+        "x": 589,
+        "y": 174,
+        "w": 162,
+        "h": 413
+      }
+    },
+    {
+      "id": "control-panel-translation",
+      "kind": "joystick",
+      "binding": "joy",
+      "label": "X Y",
+      "topic": "/cmd/joystick",
+      "showTopicInfo": false,
+      "color": "#4a9eff",
+      "deadzone": 0.1,
+      "diskSize": 80,
+      "labels": {
+        "top": "Y+",
+        "right": "X+",
+        "bottom": "Y-",
+        "left": "X-"
+      },
+      "rect": {
+        "x": 765,
+        "y": 185,
+        "w": 240,
+        "h": 240
+      }
+    },
+    {
+      "id": "control-panel-rotation",
+      "kind": "joystick",
+      "binding": "rot",
+      "label": "RX RY",
+      "topic": "/cmd/joystick_rxry",
+      "showTopicInfo": false,
+      "color": "#ff4d67",
+      "deadzone": 0.1,
+      "diskSize": 80,
+      "labels": {
+        "top": "RY+",
+        "right": "RX+",
+        "bottom": "RY-",
+        "left": "RX-"
+      },
+      "rect": {
+        "x": 1015,
+        "y": 185,
+        "w": 240,
+        "h": 240
+      }
+    },
+    {
+      "id": "control-panel-rz",
+      "kind": "slider",
+      "binding": "rz",
+      "label": "RZ",
+      "topic": "/cmd/joystick_rz",
+      "direction": "horizontal",
+      "showLabel": true,
+      "showTopicInfo": false,
+      "labelAlign": "center",
+      "min": -1,
+      "max": 1,
+      "step": 0.01,
+      "rect": {
+        "x": 765,
+        "y": 432,
+        "w": 490,
+        "h": 157
+      }
+    },
+    {
+      "id": "control-panel-mode",
+      "kind": "mode-button",
+      "label": "Mode",
+      "topic": "/cmd/mode",
+      "rect": {
+        "x": 600,
+        "y": 616,
+        "w": 141,
+        "h": 71
+      }
+    },
+    {
+      "id": "control-panel-servo-telemetry",
+      "kind": "topic-monitor",
+      "label": "Servo Telemetry",
+      "topic": "/ui/visual_servoing/control_panel_topics",
+      "topics": [
+        {
+          "label": "Tags",
+          "topic": "/tag_detections",
+          "messageType": "extender_msgs/msg/SharedControlGoalArray"
+        },
+        {
+          "label": "Cmd",
+          "topic": "/visual_servoing/velocity_command",
+          "messageType": "geometry_msgs/msg/TwistStamped"
+        },
+        {
+          "label": "Err",
+          "topic": "/visual_servoing/error_TAGtoTAGd",
+          "messageType": "geometry_msgs/msg/TwistStamped"
+        }
+      ],
+      "showSummary": true,
+      "showDetails": false,
+      "showRaw": false,
+      "staleAfterMs": 2000,
+      "rect": {
+        "x": 763,
+        "y": 606,
+        "w": 492,
+        "h": 104
+      }
+    }
+  ],
+  "poses": [],
+  "canvas": {
+    "presetId": "hd",
+    "runtimeMode": "fit"
+  },
+  "updatedAt": "2026-02-24T00:00:00.000Z"
+}

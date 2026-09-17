@@ -96,7 +96,8 @@ export class WsClient {
         parsed &&
         (parsed.type === "state" ||
           parsed.type === "event" ||
-          parsed.type === "measure_result")
+          parsed.type === "measure_result" ||
+          parsed.type === "topic_snapshot")
       ) {
         return parsed;
       }

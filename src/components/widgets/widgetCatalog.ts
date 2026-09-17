@@ -5,6 +5,7 @@ import type {
   DrinkWidget,
   GripperControlWidget,
   MagnetControlWidget,
+  MomentaryRosMessageWidget,
   JoystickWidget,
   LogsWidget,
   LoadPoseButtonWidget,
@@ -20,6 +21,7 @@ import type {
   SliderWidget,
   TextareaWidget,
   TextWidget,
+  TopicMonitorWidget,
   TogglePublisherWidget,
 } from "./widgetTypes";
 import { nextWidgetId } from "./widgetTypes";
@@ -27,6 +29,11 @@ import {
   DEFAULT_ROS_MESSAGE_TOGGLE_MESSAGE_TYPE,
   getDefaultRosMessageTogglePayloads,
 } from "./rosMessageToggle/model";
+import {
+  DEFAULT_MOMENTARY_ROS_MESSAGE_PRESSED_PAYLOAD,
+  DEFAULT_MOMENTARY_ROS_MESSAGE_RELEASED_PAYLOAD,
+  DEFAULT_MOMENTARY_ROS_MESSAGE_TYPE,
+} from "./momentaryRosMessage/model";
 
 export type WidgetCatalogType =
   | "joystick"
@@ -45,11 +52,13 @@ export type WidgetCatalogType =
   | "magnet-control"
   | "toggle-publisher"
   | "ros-message-toggle"
+  | "momentary-ros-message"
   | "stream-display"
   | "throw-draw"
   | "drink"
   | "curves"
   | "logs"
+  | "topic-monitor"
   | "linear-joystick"
   | "gauge"
   | "toggle"
@@ -80,11 +89,13 @@ export const WIDGET_CATALOG: WidgetCatalogEntry[] = [
   { type: "magnet-control", label: "Magnet Control", enabled: true, defaultSize: { w: 240, h: 120 } },
   { type: "toggle-publisher", label: "Toggle Publisher", enabled: true, defaultSize: { w: 240, h: 120 } },
   { type: "ros-message-toggle", label: "ROS Message Toggle", enabled: true, defaultSize: { w: 240, h: 120 } },
+  { type: "momentary-ros-message", label: "Momentary ROS Message", enabled: true, defaultSize: { w: 260, h: 120 } },
   { type: "stream-display", label: "Stream Display", enabled: true, defaultSize: { w: 360, h: 260 } },
   { type: "throw-draw", label: "Throw Draw", enabled: true, defaultSize: { w: 640, h: 360 } },
   { type: "drink", label: "Drink Button", enabled: true, defaultSize: { w: 180, h: 58 } },
   { type: "curves", label: "Curves", enabled: true, defaultSize: { w: 420, h: 240 } },
   { type: "logs", label: "Logs", enabled: true, defaultSize: { w: 360, h: 220 } },
+  { type: "topic-monitor", label: "Topic Monitor", enabled: true, defaultSize: { w: 460, h: 250 } },
   { type: "linear-joystick", label: "Linear Joystick", enabled: false, defaultSize: { w: 250, h: 60 } },
   { type: "gauge", label: "Gauge", enabled: false, defaultSize: { w: 150, h: 150 } },
   { type: "toggle", label: "Toggle", enabled: false, defaultSize: { w: 120, h: 80 } },
@@ -256,7 +267,7 @@ export function createWidgetFromCatalogType(
       label: "Max Velocity",
       topic: "/cmd/max_velocity",
       min: 0,
-      max: 3,
+      max: 1,
       step: 0.01,
       rect: { x, y, w: 260, h: 90 },
     };
@@ -315,6 +326,20 @@ export function createWidgetFromCatalogType(
     return widget;
   }
 
+  if (type === "momentary-ros-message") {
+    const widget: MomentaryRosMessageWidget = {
+      id: nextWidgetId(),
+      kind: "momentary-ros-message",
+      label: "Hold",
+      topic: "/activate_snake",
+      messageType: DEFAULT_MOMENTARY_ROS_MESSAGE_TYPE,
+      pressedPayload: DEFAULT_MOMENTARY_ROS_MESSAGE_PRESSED_PAYLOAD,
+      releasedPayload: DEFAULT_MOMENTARY_ROS_MESSAGE_RELEASED_PAYLOAD,
+      rect: { x, y, w: 260, h: 120 },
+    };
+    return widget;
+  }
+
   if (type === "stream-display") {
     const widget: StreamDisplayWidget = {
       id: nextWidgetId(),
@@ -328,6 +353,28 @@ export function createWidgetFromCatalogType(
       showUrl: true,
       overlayText: "stream preview",
       rect: { x, y, w: 360, h: 260 },
+    };
+    return widget;
+  }
+
+  if (type === "topic-monitor") {
+    const widget: TopicMonitorWidget = {
+      id: nextWidgetId(),
+      kind: "topic-monitor",
+      label: "Topic Monitor",
+      topic: "/ui/topic_monitor",
+      topics: [
+        {
+          label: "Detections",
+          topic: "/tag_detections",
+          messageType: "extender_msgs/msg/SharedControlGoalArray",
+        },
+      ],
+      showSummary: true,
+      showDetails: true,
+      showRaw: false,
+      staleAfterMs: 2000,
+      rect: { x, y, w: 460, h: 250 },
     };
     return widget;
   }

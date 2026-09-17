@@ -166,7 +166,7 @@
     {
       "id": "pet-cfg-lin-x",
       "kind": "button",
-      "label": "Invert Linear X",
+      "label": "LX +",
       "topic": "/teleop_config/invert_linear_x",
       "payload": "toggle",
       "tone": "success",
@@ -180,7 +180,7 @@
     {
       "id": "pet-cfg-lin-y",
       "kind": "button",
-      "label": "Invert Linear Y",
+      "label": "LY +",
       "topic": "/teleop_config/invert_linear_y",
       "payload": "toggle",
       "tone": "success",
@@ -194,7 +194,7 @@
     {
       "id": "pet-cfg-lin-z",
       "kind": "button",
-      "label": "Invert Linear Z",
+      "label": "LZ +",
       "topic": "/teleop_config/invert_linear_z",
       "payload": "toggle",
       "tone": "success",
@@ -208,7 +208,7 @@
     {
       "id": "pet-cfg-ang-x",
       "kind": "button",
-      "label": "Invert Angular X",
+      "label": "AX +",
       "topic": "/teleop_config/invert_angular_x",
       "payload": "toggle",
       "tone": "danger",
@@ -222,7 +222,7 @@
     {
       "id": "pet-cfg-ang-y",
       "kind": "button",
-      "label": "Invert Angular Y",
+      "label": "AY +",
       "topic": "/teleop_config/invert_angular_y",
       "payload": "toggle",
       "tone": "danger",
@@ -236,7 +236,7 @@
     {
       "id": "pet-cfg-ang-z",
       "kind": "button",
-      "label": "Invert Angular Z",
+      "label": "AZ +",
       "topic": "/teleop_config/invert_angular_z",
       "payload": "toggle",
       "tone": "danger",
@@ -253,5 +253,5 @@
     "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.148Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

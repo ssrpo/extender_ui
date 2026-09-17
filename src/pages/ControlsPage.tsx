@@ -19,6 +19,8 @@ import {
   LogsWidget,
   MagnetControlWidget,
   ModeButtonWidget,
+  MomentaryRosMessageFields,
+  MomentaryRosMessageWidget,
   MaxVelocityWidget,
   NavigationBarWidget,
   NavigationButtonWidget,
@@ -28,12 +30,14 @@ import {
   SavePoseButtonWidget,
   SliderWidget,
   StreamDisplayWidget,
+  TopicMonitorWidget,
   ThrowDrawWidget,
   TogglePublisherFields,
   TextareaWidget,
   TextWidget,
   TogglePublisherWidget,
   WIDGET_CATALOG,
+  buildMomentaryRosMessageWsMessage,
   buildRosMessageToggleWsMessage,
   buildTogglePublisherWsMessage,
   cloneWidgets,
@@ -53,6 +57,7 @@ import {
   type LoadPoseButtonWidgetModel,
   type LogsWidgetModel,
   type MaxVelocityWidgetModel,
+  type MomentaryRosMessageWidgetModel,
   type NavigationBarWidgetModel,
   type NavigationButtonWidgetModel,
   type PoseSnapshot,
@@ -66,6 +71,7 @@ import {
   type TextAlign,
   type TextareaWidgetModel,
   type TextWidgetModel,
+  type TopicMonitorWidgetModel,
   type WidgetIcon,
   type WidgetCatalogType,
   type WidgetConfiguration,
@@ -86,6 +92,10 @@ import {
   resolvePendingResizeSourcePreset,
 } from "./controls/canvasPresetResizing";
 import { useCanvasHistory } from "./controls/useCanvasHistory";
+import {
+  applyTeleopConfigScalarValue,
+  resolveTeleopConfigScalarValue,
+} from "./applicationTeleopConfig";
 
 type ControlsPageProps = {
   focusOnly?: boolean;
@@ -207,7 +217,23 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
   const setZ = useTeleopStore((s) => s.setZ);
   const setRz = useTeleopStore((s) => s.setRz);
   const maxVelocity = useTeleopStore((s) => s.maxVelocity);
+  const translationGain = useTeleopStore((s) => s.translationGain);
+  const rotationGain = useTeleopStore((s) => s.rotationGain);
+  const scaleX = useTeleopStore((s) => s.scaleX);
+  const scaleY = useTeleopStore((s) => s.scaleY);
+  const scaleZ = useTeleopStore((s) => s.scaleZ);
+  const angularScaleX = useTeleopStore((s) => s.angularScaleX);
+  const angularScaleY = useTeleopStore((s) => s.angularScaleY);
+  const angularScaleZ = useTeleopStore((s) => s.angularScaleZ);
   const setMaxVelocity = useTeleopStore((s) => s.setMaxVelocity);
+  const setTranslationGain = useTeleopStore((s) => s.setTranslationGain);
+  const setRotationGain = useTeleopStore((s) => s.setRotationGain);
+  const setScaleX = useTeleopStore((s) => s.setScaleX);
+  const setScaleY = useTeleopStore((s) => s.setScaleY);
+  const setScaleZ = useTeleopStore((s) => s.setScaleZ);
+  const setAngularScaleX = useTeleopStore((s) => s.setAngularScaleX);
+  const setAngularScaleY = useTeleopStore((s) => s.setAngularScaleY);
+  const setAngularScaleZ = useTeleopStore((s) => s.setAngularScaleZ);
   const wsState = useTeleopStore((s) => s.wsState);
   const cameraStreamUrl = useUiStore((s) => s.cameraStreamUrl);
   const rvizStreamUrl = useUiStore((s) => s.rvizStreamUrl);
@@ -238,6 +264,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
     Record<string, { angle: number; duration: number }>
   >({});
   const [throwDrawAlphaValues, setThrowDrawAlphaValues] = useState<Record<string, number>>({});
+  const [maxVelocityWidgetValues, setMaxVelocityWidgetValues] = useState<Record<string, number>>({});
   const [freshnessClock, setFreshnessClock] = useState<number>(() => Date.now());
   const [rosbagRecording, setRosbagRecording] = useState(false);
   const [rosbagStatus, setRosbagStatus] = useState("idle");
@@ -445,6 +472,28 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
   const hasCanvasSettingsDiff = canvasSettingsSignature !== savedBaseline.canvasSignature;
   const hasNameDiff = trimmedNameInput.length > 0 && trimmedNameInput !== savedBaseline.name;
   const isCanvasDirty = hasWidgetDiff || hasCanvasSettingsDiff || hasNameDiff;
+  const teleopConfigScalarSnapshot = {
+    maxVelocity,
+    translationGain,
+    rotationGain,
+    scaleX,
+    scaleY,
+    scaleZ,
+    angularScaleX,
+    angularScaleY,
+    angularScaleZ,
+  };
+  const teleopConfigScalarActions = {
+    setMaxVelocity,
+    setTranslationGain,
+    setRotationGain,
+    setScaleX,
+    setScaleY,
+    setScaleZ,
+    setAngularScaleX,
+    setAngularScaleY,
+    setAngularScaleZ,
+  };
 
   const editorCanvasSize = useMemo(
     () => resolveCanvasArtboardSize(widgets, canvasSettings),
@@ -791,11 +840,23 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
   ) => {
     updateSelectedWidget((widget) => (widget.kind === "ros-message-toggle" ? updater(widget) : widget));
   };
+  const updateSelectedMomentaryRosMessage = (
+    updater: (widget: MomentaryRosMessageWidgetModel) => MomentaryRosMessageWidgetModel
+  ) => {
+    updateSelectedWidget((widget) =>
+      widget.kind === "momentary-ros-message" ? updater(widget) : widget
+    );
+  };
   const updateSelectedCurves = (updater: (widget: CurvesWidgetModel) => CurvesWidgetModel) => {
     updateSelectedWidget((widget) => (widget.kind === "curves" ? updater(widget) : widget));
   };
   const updateSelectedLogs = (updater: (widget: LogsWidgetModel) => LogsWidgetModel) => {
     updateSelectedWidget((widget) => (widget.kind === "logs" ? updater(widget) : widget));
+  };
+  const updateSelectedTopicMonitor = (
+    updater: (widget: TopicMonitorWidgetModel) => TopicMonitorWidgetModel
+  ) => {
+    updateSelectedWidget((widget) => (widget.kind === "topic-monitor" ? updater(widget) : widget));
   };
 
   const markWidgetPulse = (widgetId: string) => {
@@ -1432,6 +1493,11 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
     }
 
     if (widget.kind === "max-velocity") {
+      const clampToWidgetRange = (raw: number) => Math.max(widget.min, Math.min(widget.max, raw));
+      const fallbackValue = clampToWidgetRange(maxVelocityWidgetValues[widget.id] ?? 1);
+      const widgetValue =
+        resolveTeleopConfigScalarValue(widget.topic, teleopConfigScalarSnapshot) ??
+        fallbackValue;
       const reverseDirection =
         widget.reverseDirection ??
         widget.topic === PETANQUE_TOTAL_DURATION_TOPIC;
@@ -1460,7 +1526,7 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
               current.kind === "max-velocity" ? { ...current, label: nextLabel } : current
             )
           }
-          value={maxVelocity}
+          value={clampToWidgetRange(widgetValue)}
           endpointLabels={endpointLabels}
           bubbleValueFormatter={resolveMaxVelocityBubbleFormatter(widget, reverseDirection)}
           unsafeThreshold={
@@ -1471,7 +1537,21 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
                 : undefined
           }
           reverseDirection={reverseDirection}
-          onValueChange={setMaxVelocity}
+          onValueChange={(nextValue) => {
+            const resolvedNextValue = clampToWidgetRange(nextValue);
+            const appliedToTeleopConfig = applyTeleopConfigScalarValue(
+              widget.topic,
+              resolvedNextValue,
+              teleopConfigScalarActions
+            );
+            if (!appliedToTeleopConfig) {
+              setMaxVelocityWidgetValues((prev) => ({
+                ...prev,
+                [widget.id]: resolvedNextValue,
+              }));
+            }
+            markWidgetPulse(widget.id);
+          }}
         />
       );
     }
@@ -1595,6 +1675,33 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
       );
     }
 
+    if (widget.kind === "momentary-ros-message") {
+      return (
+        <MomentaryRosMessageWidget
+          key={widget.id}
+          widget={widget}
+          selected={selected}
+          onSelect={() => setSelectedWidgetId(widget.id)}
+          onRectChange={(next) => handleWidgetRectChange(widget.id, next)}
+          onLabelChange={(nextLabel) =>
+            updateWidget(widget.id, (current) =>
+              current.kind === "momentary-ros-message" ? { ...current, label: nextLabel } : current
+            )
+          }
+          onPress={() => {
+            wsClient.send(buildMomentaryRosMessageWsMessage(widget, "pressed"));
+            markWidgetPulse(widget.id);
+            setStatusMessage(`Momentary "${widget.label}" published PRESSED.`);
+          }}
+          onRelease={() => {
+            wsClient.send(buildMomentaryRosMessageWsMessage(widget, "released"));
+            markWidgetPulse(widget.id);
+            setStatusMessage(`Momentary "${widget.label}" published RELEASED.`);
+          }}
+        />
+      );
+    }
+
     if (widget.kind === "stream-display") {
       const url =
         widget.source === "camera"
@@ -1679,6 +1786,23 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
           onLabelChange={(nextLabel) =>
             updateWidget(widget.id, (current) =>
               current.kind === "logs" ? { ...current, label: nextLabel } : current
+            )
+          }
+        />
+      );
+    }
+
+    if (widget.kind === "topic-monitor") {
+      return (
+        <TopicMonitorWidget
+          key={widget.id}
+          widget={widget}
+          selected={selected}
+          onSelect={() => setSelectedWidgetId(widget.id)}
+          onRectChange={(next) => handleWidgetRectChange(widget.id, next)}
+          onLabelChange={(nextLabel) =>
+            updateWidget(widget.id, (current) =>
+              current.kind === "topic-monitor" ? { ...current, label: nextLabel } : current
             )
           }
         />
@@ -3059,6 +3183,13 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
                         updateSelectedRosMessageToggle(() => nextWidget)
                       }
                     />
+                  ) : selectedWidget.kind === "momentary-ros-message" ? (
+                    <MomentaryRosMessageFields
+                      widget={selectedWidget}
+                      onChange={(nextWidget: MomentaryRosMessageWidgetModel) =>
+                        updateSelectedMomentaryRosMessage(() => nextWidget)
+                      }
+                    />
                   ) : selectedWidget.kind === "stream-display" ? (
                     <>
                       <div className="controls-property-title">Stream Display</div>
@@ -3348,6 +3479,171 @@ export function ControlsPage({ focusOnly = false, onDirtyChange }: ControlsPageP
                           </select>
                         </label>
                       </div>
+                    </>
+                  ) : selectedWidget.kind === "topic-monitor" ? (
+                    <>
+                      <div className="controls-property-title">Topic Monitor</div>
+                      <label className="controls-field">
+                        <span>Summary</span>
+                        <select
+                          className="editor-input"
+                          value={(selectedWidget.showSummary ?? true) ? "visible" : "hidden"}
+                          onChange={(event) =>
+                            updateSelectedTopicMonitor((widget) => ({
+                              ...widget,
+                              showSummary: event.target.value === "visible",
+                            }))
+                          }
+                        >
+                          <option value="visible">visible</option>
+                          <option value="hidden">hidden</option>
+                        </select>
+                      </label>
+                      <label className="controls-field">
+                        <span>Details</span>
+                        <select
+                          className="editor-input"
+                          value={(selectedWidget.showDetails ?? true) ? "visible" : "hidden"}
+                          onChange={(event) =>
+                            updateSelectedTopicMonitor((widget) => ({
+                              ...widget,
+                              showDetails: event.target.value === "visible",
+                            }))
+                          }
+                        >
+                          <option value="visible">visible</option>
+                          <option value="hidden">hidden</option>
+                        </select>
+                      </label>
+                      <label className="controls-field">
+                        <span>Raw JSON</span>
+                        <select
+                          className="editor-input"
+                          value={selectedWidget.showRaw ? "visible" : "hidden"}
+                          onChange={(event) =>
+                            updateSelectedTopicMonitor((widget) => ({
+                              ...widget,
+                              showRaw: event.target.value === "visible",
+                            }))
+                          }
+                        >
+                          <option value="hidden">hidden</option>
+                          <option value="visible">visible</option>
+                        </select>
+                      </label>
+                      <label className="controls-field">
+                        <span>Stale Threshold (ms)</span>
+                        <input
+                          type="number"
+                          min={250}
+                          max={60000}
+                          step={250}
+                          className="editor-input"
+                          value={selectedWidget.staleAfterMs ?? 2000}
+                          onChange={(event) =>
+                            updateSelectedTopicMonitor((widget) => ({
+                              ...widget,
+                              staleAfterMs: Math.max(
+                                250,
+                                Math.min(
+                                  60000,
+                                  Math.round(readNumber(event.target.value, widget.staleAfterMs ?? 2000))
+                                )
+                              ),
+                            }))
+                          }
+                        />
+                      </label>
+                      {selectedWidget.topics.map((topic, index) => (
+                        <div className="controls-field-group" key={`${topic.topic}-${index}`}>
+                          <div className="controls-field-group-header">
+                            <div className="controls-property-subtitle">Topic {index + 1}</div>
+                            <button
+                              type="button"
+                              className="controls-inline-button"
+                              disabled={selectedWidget.topics.length <= 1}
+                              onClick={() =>
+                                updateSelectedTopicMonitor((widget) => ({
+                                  ...widget,
+                                  topics: widget.topics.filter((_, itemIndex) => itemIndex !== index),
+                                }))
+                              }
+                            >
+                              Remove
+                            </button>
+                          </div>
+                          <label className="controls-field">
+                            <span>Label</span>
+                            <input
+                              className="editor-input"
+                              value={topic.label}
+                              onChange={(event) =>
+                                updateSelectedTopicMonitor((widget) => ({
+                                  ...widget,
+                                  topics: widget.topics.map((item, itemIndex) =>
+                                    itemIndex === index
+                                      ? { ...item, label: event.target.value }
+                                      : item
+                                  ),
+                                }))
+                              }
+                            />
+                          </label>
+                          <label className="controls-field">
+                            <span>Topic</span>
+                            <input
+                              className="editor-input"
+                              value={topic.topic}
+                              onChange={(event) =>
+                                updateSelectedTopicMonitor((widget) => ({
+                                  ...widget,
+                                  topics: widget.topics.map((item, itemIndex) =>
+                                    itemIndex === index
+                                      ? { ...item, topic: event.target.value }
+                                      : item
+                                  ),
+                                }))
+                              }
+                            />
+                          </label>
+                          <label className="controls-field">
+                            <span>Message Type</span>
+                            <input
+                              className="editor-input"
+                              value={topic.messageType}
+                              onChange={(event) =>
+                                updateSelectedTopicMonitor((widget) => ({
+                                  ...widget,
+                                  topics: widget.topics.map((item, itemIndex) =>
+                                    itemIndex === index
+                                      ? { ...item, messageType: event.target.value }
+                                      : item
+                                  ),
+                                }))
+                              }
+                            />
+                          </label>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="controls-inline-button"
+                        onClick={() =>
+                          updateSelectedTopicMonitor((widget) => ({
+                            ...widget,
+                            topics: [
+                              ...widget.topics,
+                              {
+                                label: `Topic ${widget.topics.length + 1}`,
+                                topic: "/debug/topic",
+                                messageType: "std_msgs/msg/String",
+                              },
+                            ],
+                          }))
+                        }
+                      >
+                        Add Topic
+                      </button>
                     </>
                   ) : selectedWidget.kind === "mode-button" ? (
                     <>

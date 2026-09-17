@@ -50,6 +50,7 @@
       "label": "Apply Config",
       "topic": "/ui/config/apply",
       "payload": "apply",
+      "tone": "default",
       "rect": {
         "x": 20,
         "y": 570,
@@ -63,6 +64,7 @@
       "label": "Reset Defaults",
       "topic": "/ui/config/reset",
       "payload": "reset",
+      "tone": "default",
       "rect": {
         "x": 240,
         "y": 570,
@@ -118,6 +120,16 @@
           "targetScreenId": "petanque"
         },
         {
+          "id": "cfg-nav-snake_control",
+          "label": "snake_control",
+          "targetScreenId": "snake_control"
+        },
+        {
+          "id": "cfg-nav-petanque_teleop_config",
+          "label": "petanque_teleop_config",
+          "targetScreenId": "petanque_teleop_config"
+        },
+        {
           "id": "cfg-nav-curves",
           "label": "curves",
           "targetScreenId": "curves"
@@ -157,8 +169,8 @@
   ],
   "poses": [],
   "canvas": {
-    "presetId": "tablet",
+    "presetId": "hd",
     "runtimeMode": "fit"
   },
-  "updatedAt": "2026-03-10T23:15:29.149Z"
+  "updatedAt": "2026-02-24T00:00:00.000Z"
 }

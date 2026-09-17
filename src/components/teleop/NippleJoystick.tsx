@@ -1,7 +1,6 @@
-import { useEffect, useRef } from "react";
-import type { JoystickManager } from "nipplejs";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
-const clamp = (v: number, min = -1, max = 1) => Math.max(min, Math.min(max, v));
+const clamp = (value: number, min = -1, max = 1) => Math.max(min, Math.min(max, value));
 
 export type NippleJoystickProps = {
   onMove: (x: number, y: number) => void;
@@ -21,83 +20,81 @@ export function NippleJoystick({
   className,
 }: NippleJoystickProps) {
   const zoneRef = useRef<HTMLDivElement | null>(null);
-  const managerRef = useRef<JoystickManager | null>(null);
+  const activePointerIdRef = useRef<number | null>(null);
   const onMoveRef = useRef(onMove);
   const onEndRef = useRef(onEnd);
+  const [visualVector, setVisualVector] = useState({ x: 0, y: 0 });
+  const knobDiameter = size * 0.33;
+  const visualTravelRadius = Math.max(1, (size - knobDiameter) / 2);
+  const axisActivationThreshold = 0.08;
+  const visualMagnitude = Math.hypot(visualVector.x, visualVector.y);
+  const isMovingOutsideDeadzone = visualMagnitude >= deadzone;
+  const isHorizontalAxisActive = isMovingOutsideDeadzone && Math.abs(visualVector.y) <= axisActivationThreshold;
+  const isVerticalAxisActive = isMovingOutsideDeadzone && Math.abs(visualVector.x) <= axisActivationThreshold;
 
   useEffect(() => {
     onMoveRef.current = onMove;
     onEndRef.current = onEnd;
   }, [onMove, onEnd]);
 
-  useEffect(() => {
-    if (!zoneRef.current) return;
+  const vectorFromPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const rect = zoneRef.current?.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
 
-    let active = true;
-    let frameId = 0;
-
-    const setup = () =>
-      import("nipplejs")
-        .then((module) => {
-          if (!active || !zoneRef.current) return;
-
-          const zone = zoneRef.current;
-          const centerX = Math.round(zone.clientWidth / 2);
-          const centerY = Math.round(zone.clientHeight / 2);
-
-          if (centerX <= 0 || centerY <= 0) {
-            frameId = window.requestAnimationFrame(() => {
-              if (active) void setup();
-            });
-            return;
-          }
-
-          type NippleModule = typeof import("nipplejs");
-          const api = (module as NippleModule & { default?: NippleModule }).default ?? module;
-          managerRef.current = api.create({
-            zone,
-            mode: "static",
-            // Use pixel coordinates from the rendered zone to avoid centering drift.
-            position: { left: `${centerX}px`, top: `${centerY}px` },
-            color,
-            size,
-            restOpacity: 0.8,
-            restJoystick: true,
-            // Recompute joystick coordinates against layout/scroll changes in parent containers.
-            dynamicPage: true,
-            lockX: false,
-            lockY: false,
-          });
-
-          managerRef.current.on("move", (_, data) => {
-            const x = clamp(data.vector.x);
-            const y = clamp(data.vector.y);
-            onMoveRef.current(x, y);
-          });
-
-          managerRef.current.on("end", () => {
-            if (onEndRef.current) {
-              onEndRef.current();
-            } else {
-              onMoveRef.current(0, 0);
-            }
-          });
-        })
-      .catch(() => {
-        onMoveRef.current(0, 0);
-      });
-
-    void setup();
-
-    return () => {
-      active = false;
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-      managerRef.current?.destroy();
-      managerRef.current = null;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const radius = Math.max(1, Math.min(rect.width, rect.height) / 2);
+    const rawX = (event.clientX - centerX) / radius;
+    const rawY = -(event.clientY - centerY) / radius;
+    const magnitude = Math.hypot(rawX, rawY);
+    const scale = magnitude > 1 ? 1 / magnitude : 1;
+    return {
+      x: clamp(rawX * scale),
+      y: clamp(rawY * scale),
     };
-  }, [color, size]);
+  };
+
+  const publishVector = (vector: { x: number; y: number }) => {
+    setVisualVector(vector);
+    const magnitude = Math.hypot(vector.x, vector.y);
+    if (magnitude < deadzone) {
+      onMoveRef.current(0, 0);
+      return;
+    }
+    onMoveRef.current(vector.x, vector.y);
+  };
+
+  const endInteraction = () => {
+    if (activePointerIdRef.current === null) return;
+    activePointerIdRef.current = null;
+    setVisualVector({ x: 0, y: 0 });
+    if (onEndRef.current) {
+      onEndRef.current();
+    } else {
+      onMoveRef.current(0, 0);
+    }
+  };
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    activePointerIdRef.current = event.pointerId;
+    publishVector(vectorFromPointer(event));
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (activePointerIdRef.current !== event.pointerId) return;
+    publishVector(vectorFromPointer(event));
+  };
+
+  const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (activePointerIdRef.current !== event.pointerId) return;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    endInteraction();
+  };
 
   return (
     <div
@@ -106,10 +103,35 @@ export function NippleJoystick({
       style={{
         ["--joy-size" as string]: `${size}px`,
         ["--joy-deadzone" as string]: `${deadzone}`,
+        ["--joy-color" as string]: color,
+        ["--joy-knob-size" as string]: `${knobDiameter}px`,
+        ["--joy-x" as string]: `${visualVector.x * visualTravelRadius}px`,
+        ["--joy-y" as string]: `${visualVector.y * -visualTravelRadius}px`,
       }}
     >
       <div className="joystick-deadzone" />
-      <div className="joystick-zone" ref={zoneRef} />
+      <div
+        className="joystick-zone"
+        ref={zoneRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onLostPointerCapture={endInteraction}
+      >
+        <div className="joystick-back" />
+        <div
+          className={`joystick-axis-guide joystick-axis-guide-x ${
+            isHorizontalAxisActive ? "joystick-axis-guide-active" : ""
+          }`.trim()}
+        />
+        <div
+          className={`joystick-axis-guide joystick-axis-guide-y ${
+            isVerticalAxisActive ? "joystick-axis-guide-active" : ""
+          }`.trim()}
+        />
+        <div className="joystick-front" />
+      </div>
     </div>
   );
 }
